@@ -1,13 +1,13 @@
-package com.dodum.server;
+package BXND.dodum;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DodumServerApplicationTests {
+class DodumApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+	@Test
+	void contextLoads() {
+	}
 
 }
