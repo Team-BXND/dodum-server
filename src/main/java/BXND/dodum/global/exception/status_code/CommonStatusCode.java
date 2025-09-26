@@ -1,4 +1,4 @@
-package com.GoWalk.global.exception.status_code;
+package BXND.dodum.global.exception.status_code;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,11 +1,11 @@
-package com.GoWalk.global.exception;
+package BXND.dodum.global.exception;
 
-import com.GoWalk.global.data.ApiResponse;
-import com.GoWalk.global.data.ErrorResponse;
-import com.GoWalk.global.exception.exception.ApplicationException;
-import com.GoWalk.domain.auth.exception.AuthStatusCode;
-import com.GoWalk.global.exception.status_code.CommonStatusCode;
-import com.GoWalk.global.exception.status_code.StatusCode;
+import BXND.dodum.domain.auth.exception.AuthStatusCode;
+import BXND.dodum.global.data.ApiResponse;
+import BXND.dodum.global.data.ErrorResponse;
+import BXND.dodum.global.exception.exception.ApplicationException;
+import BXND.dodum.global.exception.status_code.CommonStatusCode;
+import BXND.dodum.global.exception.status_code.StatusCode;
 import jakarta.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;

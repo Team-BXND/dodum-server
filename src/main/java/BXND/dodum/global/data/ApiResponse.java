@@ -1,4 +1,4 @@
-package com.GoWalk.global.data;
+package BXND.dodum.global.data;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Map;

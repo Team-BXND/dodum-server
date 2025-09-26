@@ -1,7 +1,7 @@
-package com.GoWalk.domain.auth.exception;
+package BXND.dodum.domain.auth.exception;
 
-import com.GoWalk.global.exception.exception.ApplicationException;
-import com.GoWalk.global.exception.status_code.StatusCode;
+import BXND.dodum.global.exception.exception.ApplicationException;
+import BXND.dodum.global.exception.status_code.StatusCode;
 
 public class AuthException extends ApplicationException {
 
