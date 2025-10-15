@@ -1,6 +1,8 @@
 package BXND.dodum.domain.misc.presentation;
 
 import BXND.dodum.domain.misc.application.MiscApplicationUseCase;
+import BXND.dodum.domain.misc.application.data.req.GetAllMiscReq;
+import BXND.dodum.domain.misc.application.data.res.GetAllMiscRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class MiscController {
   private final MiscApplicationUseCase miscApplicationUseCase;
 
-  @GetMapping("/hello")
-  public String hello(){
-    return miscApplicationUseCase.hello();
+  @GetMapping
+  public GetAllMiscRes getAllMisc(GetAllMiscReq getAllMiscReq){
+    return miscApplicationUseCase.getAllMisc(getAllMiscReq);
   }
 }
