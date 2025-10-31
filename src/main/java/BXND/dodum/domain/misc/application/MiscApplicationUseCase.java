@@ -45,6 +45,8 @@ public class MiscApplicationUseCase {
         sortProperty = "likes";
         sortDirection = Direction.DESC;
         break;
+      default:
+        throw new ApplicationException(CommonStatusCode.BAD_REQUEST);
     }
     int page = Optional.ofNullable(getAllMiscReq.page()).orElse(0);
     Pageable pageable = PageRequest.of(page, 10, Sort.by(sortDirection, sortProperty));
