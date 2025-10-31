@@ -35,7 +35,8 @@ public class MiscApplicationUseCase {
       throw new ApplicationException(CommonStatusCode.BAD_REQUEST);
     }
     Sort.Direction criteria = getAllMiscReq.criteria().name().equals(MiscCriteriaE.LATEST.name()) ? Direction.DESC : Direction.ASC;
-    Pageable pageable = PageRequest.of(getAllMiscReq.page(), 10, Sort.by(criteria, "createdAt"));
+    int page = Optional.ofNullable(getAllMiscReq.page()).orElse(0);
+    Pageable pageable = PageRequest.of(page, 10, Sort.by(criteria, "createdAt"));
     Page<MiscInfo> infosPage = miscInfoRepository.findAllByIsApprovedTrue(pageable);
     return new GetAllMiscRes(infosPage.stream().toList());
   }
