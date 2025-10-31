@@ -91,4 +91,14 @@ public class MiscApplicationUseCase {
 
     miscInfo.setApproved(true);
   }
+
+  @Transactional
+  public void disapproveMisc(Long id) {
+    MiscInfo miscInfo = miscInfoRepository.findById(id)
+        .orElseThrow(() -> new ApplicationException(CommonStatusCode.NOT_FOUND));
+
+    // To-Do: 유저 권한 확인 필요
+
+    miscInfo.setApproved(false);
+  }
 }

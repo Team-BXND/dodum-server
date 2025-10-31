@@ -58,4 +58,10 @@ public class MiscController {
     miscApplicationUseCase.approveMisc(id);
     return ApiResponse.ok(null);
   }
+
+  @PatchMapping("/{id}/disapprove")
+  public ApiResponse<Void> disapproveMisc(@PathVariable Long id) {
+    miscApplicationUseCase.disapproveMisc(id);
+    return ApiResponse.ok(null);
+  }
 }
