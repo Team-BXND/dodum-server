@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MiscApplicationUseCase {
   private final MiscInfoRepository miscInfoRepository;
 
-  public GetAllMiscRes getAllMisc(GetAllMiscReq getAllMiscReq){
+  public GetAllMiscRes getAllMisc(GetAllMiscReq getAllMiscReq) {
     if (getAllMiscReq.criteria() == null) {
       throw new ApplicationException(CommonStatusCode.BAD_REQUEST);
     }
