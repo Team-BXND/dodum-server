@@ -34,9 +34,26 @@ public class MiscApplicationUseCase {
     if (getAllMiscReq.criteria() == null) {
       throw new ApplicationException(CommonStatusCode.BAD_REQUEST);
     }
-    Sort.Direction criteria = getAllMiscReq.criteria().name().equals(MiscCriteriaE.LATEST.name()) ? Direction.DESC : Direction.ASC;
+    String sortProperty;
+    Sort.Direction sortDirection;
+    switch (getAllMiscReq.criteria()) {
+      case LATEST:
+        sortProperty = "createdAt";
+        sortDirection = Direction.DESC;
+        break;
+      case LIKES:
+        sortProperty = "likes";
+        sortDirection = Direction.DESC;
+        break;
+      case VIEWS:
+        sortProperty = "views";
+        sortDirection = Direction.DESC;
+        break;
+      default:
+        throw new ApplicationException(CommonStatusCode.BAD_REQUEST);
+    }
     int page = Optional.ofNullable(getAllMiscReq.page()).orElse(0);
-    Pageable pageable = PageRequest.of(page, 10, Sort.by(criteria, "createdAt"));
+    Pageable pageable = PageRequest.of(page, 10, Sort.by(sortDirection, sortProperty));
     Page<MiscInfo> infosPage = miscInfoRepository.findAllByIsApprovedTrue(pageable);
     return new GetAllMiscRes(infosPage.stream().toList());
   }
