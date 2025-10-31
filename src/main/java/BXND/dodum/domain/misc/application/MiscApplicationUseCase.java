@@ -57,11 +57,7 @@ public class MiscApplicationUseCase {
 
   @Transactional
   public UpdateMiscRes updateMisc(Long id, UpdateMiscReq updateMiscReq) {
-    if (!id.equals(updateMiscReq.id())) {
-      throw new ApplicationException(CommonStatusCode.BAD_REQUEST);
-    }
-    
-    MiscInfo miscInfo = miscInfoRepository.findById(updateMiscReq.id())
+    MiscInfo miscInfo = miscInfoRepository.findById(id)
         .orElseThrow(() -> new ApplicationException(CommonStatusCode.NOT_FOUND));
 
     // To-Do: 유저 권한 확인 필요
