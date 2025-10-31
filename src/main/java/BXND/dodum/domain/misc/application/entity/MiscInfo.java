@@ -22,8 +22,7 @@ public class MiscInfo extends Base {
   @NotBlank
   String content;
 
-  @NotNull
-  Integer likes;
+  int likes;
 
   @Builder.Default
   boolean isApproved = false;
