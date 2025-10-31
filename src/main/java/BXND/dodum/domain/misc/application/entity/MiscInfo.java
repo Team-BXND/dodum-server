@@ -25,8 +25,8 @@ public class MiscInfo extends Base {
   @NotNull
   int likes;
 
-  @NotNull
-  boolean isApproved;
+  @Builder.Default
+  boolean isApproved = false;
 
   // images: string[] 및 likes 릴레이션 분리
 }
