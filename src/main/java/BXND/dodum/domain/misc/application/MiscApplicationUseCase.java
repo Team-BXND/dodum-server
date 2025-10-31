@@ -55,7 +55,7 @@ public class MiscApplicationUseCase {
     int page = Optional.ofNullable(getAllMiscReq.page()).orElse(0);
     Pageable pageable = PageRequest.of(page, 10, Sort.by(sortDirection, sortProperty));
     Page<MiscInfo> infosPage = miscInfoRepository.findAllByIsApprovedTrue(pageable);
-    return new GetAllMiscRes(infosPage.stream().toList());
+    return GetAllMiscRes.from(infosPage.stream().toList());
   }
 
   public GetMiscRes getMisc(Long id) {
