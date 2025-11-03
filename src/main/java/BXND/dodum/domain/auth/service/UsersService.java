@@ -1,10 +1,8 @@
 package BXND.dodum.domain.auth.service;
 
-import BXND.dodum.domain.auth.dto.request.GenerateTokenRequest;
-import BXND.dodum.domain.auth.dto.request.SignInRequest;
-import BXND.dodum.domain.auth.dto.request.SignOutRequest;
-import BXND.dodum.domain.auth.dto.request.SignUpRequest;
+import BXND.dodum.domain.auth.dto.request.*;
 import BXND.dodum.domain.auth.dto.response.SignInResponse;
+import BXND.dodum.domain.auth.dto.response.reGenerateAccessTokenResponse;
 import BXND.dodum.domain.auth.entity.Users;
 import BXND.dodum.domain.auth.exception.AuthException;
 import BXND.dodum.domain.auth.exception.AuthStatusCode;
@@ -15,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @RequiredArgsConstructor
@@ -63,5 +62,7 @@ public class UsersService {
         return ApiResponse.ok("로그아웃이 정상적으로 처리되었습니다.");
     }
 
-//    public ApiResponse<String> chagePassword()
+    public ApiResponse<reGenerateAccessTokenResponse> refresh(reGenerateTokenRequest request, HttpServletResponse response) {
+        return tokenUseCase.reGenerateAccessToken(request, response);
+    }
 }

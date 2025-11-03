@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
-    private final TokenUseCase tokenUseCase;
     private final UsersService usersService;
 
     @PostMapping("/signup")
@@ -40,6 +39,6 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ApiResponse<reGenerateAccessTokenResponse> reGenerateAccessToken(@RequestBody reGenerateTokenRequest request, HttpServletResponse response) {
-        return tokenUseCase.reGenerateAccessToken(request, response);
+        return usersService.refresh(request,response);
     }
 }
