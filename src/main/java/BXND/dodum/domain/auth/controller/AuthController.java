@@ -40,6 +40,6 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ApiResponse<reGenerateAccessTokenResponse> reGenerateAccessToken(@RequestBody reGenerateTokenRequest request, HttpServletResponse response) {
-        return tokenUseCase.reGenerateAccessToken(request,response);
+        return tokenUseCase.reGenerateAccessToken(request, response);
     }
 }

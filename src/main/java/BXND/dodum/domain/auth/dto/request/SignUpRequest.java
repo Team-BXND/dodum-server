@@ -1,5 +1,6 @@
 package BXND.dodum.domain.auth.dto.request;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
 public record SignUpRequest(
@@ -8,6 +9,7 @@ public record SignUpRequest(
         @NotNull
         String password,
         @NotNull
+        @Email
         String email,
         @NotNull
         String phone,
@@ -17,6 +19,5 @@ public record SignUpRequest(
         int student_no,
         String club,
         String history
-
 ) {
 }

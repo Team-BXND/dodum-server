@@ -54,12 +54,14 @@ public class UsersService {
                 users.getRole()
         );
         String accessToken = tokenUseCase.generateAccessToken(generateTokenRequest, response);
-        String refreshToken = tokenUseCase.generateRefreshToken(generateTokenRequest, response);
-        return ApiResponse.ok(SignInResponse.of(accessToken, refreshToken));
+        tokenUseCase.generateRefreshToken(generateTokenRequest, response);
+        return ApiResponse.ok(new SignInResponse(accessToken));
     }
 
     public ApiResponse<String> signOut(SignOutRequest request) {
         tokenUseCase.deleteTokens(request);
         return ApiResponse.ok("로그아웃이 정상적으로 처리되었습니다.");
     }
+
+//    public ApiResponse<String> chagePassword()
 }

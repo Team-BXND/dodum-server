@@ -30,11 +30,12 @@ public class Users {
     private int student_no;
     @Builder.Default
     @Column(columnDefinition = "TEXT")
-    private String profile = "default";
+    private String profile = "http://localhost:8080/dodum/images/profile.png";
     @Column(length = 45)
     private String club;
     @Column(columnDefinition = "TEXT")
     private String history;
 
-    private Role role;
+    @Builder.Default
+    private Role role = Role.STUDENT;
 }

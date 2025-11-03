@@ -47,7 +47,7 @@ public class TokenUseCase {
 
         Cookie cookie = new Cookie("refreshToken", refreshToken);
         cookie.setPath("/");
-        cookie.setHttpOnly(false);
+        cookie.setHttpOnly(true);
         cookie.setMaxAge(60 * 60);
         response.addCookie(cookie);
 

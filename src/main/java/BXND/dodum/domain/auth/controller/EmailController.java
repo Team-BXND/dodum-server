@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/email")
+@RequestMapping("/auth/email")
 @RequiredArgsConstructor
 public class EmailController {
 

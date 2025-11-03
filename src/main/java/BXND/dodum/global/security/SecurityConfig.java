@@ -20,6 +20,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
+  private final CustomAccessDeniedHandler customAccessDeniedHandler;
+  private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
   @Bean
   public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -36,10 +38,14 @@ public class SecurityConfig {
             )
             .formLogin(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/auth/**", "email/**").permitAll()
+                    .requestMatchers("/auth/**", "/email/**").permitAll()
                     .anyRequest().authenticated()
             )
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .exceptionHandling(ex -> ex
+                    .authenticationEntryPoint(customAuthenticationEntryPoint)
+                    .accessDeniedHandler(customAccessDeniedHandler)
+            );
 
     return http.build();
   }
