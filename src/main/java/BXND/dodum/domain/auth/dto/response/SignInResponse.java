@@ -1,6 +1,7 @@
 package BXND.dodum.domain.auth.dto.response;
 
 public record SignInResponse(
-        String accessToken
+        String accessToken,
+        String RefreshToken
 ) {
 }

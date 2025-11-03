@@ -54,8 +54,8 @@ public class UsersService {
                 users.getRole()
         );
         String accessToken = tokenUseCase.generateAccessToken(generateTokenRequest, response);
-        tokenUseCase.generateRefreshToken(generateTokenRequest, response);
-        return ApiResponse.ok(new SignInResponse(accessToken));
+        String RefreshToken =  tokenUseCase.generateRefreshToken(generateTokenRequest, response);
+        return ApiResponse.ok(new SignInResponse(accessToken, RefreshToken));
     }
 
     public ApiResponse<String> signOut(SignOutRequest request) {
