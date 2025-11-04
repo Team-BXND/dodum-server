@@ -38,9 +38,9 @@ public class ArchiveController {
         return new StatusIdRes("success", id);
     }
 
-    @DeleteMapping("/{id}")
-    public StatusMsgRes delete(@PathVariable Long id) {
-        service.delete(id);
+    @DeleteMapping
+    public StatusMsgRes delete(@RequestBody @Valid ArchiveDeleteReq req) {
+        service.delete(req);
         return new StatusMsgRes("success", "deleted");
     }
 }

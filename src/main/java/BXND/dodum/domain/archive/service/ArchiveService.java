@@ -102,8 +102,8 @@ public class ArchiveService {
     }
 
     @Transactional
-    public void delete(Long id) {
-        ArchivePost p = repo.findById(id)
+    public void delete(ArchiveDeleteReq r) {
+        ArchivePost p = repo.findById(r.archiveId())
                 .orElseThrow(() -> new ArchiveException(ArchiveStatusCode.NOT_FOUND));
         if (p.isDeleted()) return;
         assertCanModify(p);

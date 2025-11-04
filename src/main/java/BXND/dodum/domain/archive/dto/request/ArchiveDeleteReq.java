@@ -1,5 +1,7 @@
 package BXND.dodum.domain.archive.dto.request;
 
+import jakarta.validation.constraints.NotNull;
+
 public record ArchiveDeleteReq(
-        Long archiveId
+        @NotNull Long archiveId
 ) {}
