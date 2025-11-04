@@ -6,6 +6,9 @@ import BXND.dodum.global.data.ErrorResponse;
 import BXND.dodum.global.exception.exception.ApplicationException;
 import BXND.dodum.global.exception.status_code.CommonStatusCode;
 import BXND.dodum.global.exception.status_code.StatusCode;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.dao.DataIntegrityViolationException;
 import jakarta.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
@@ -180,5 +183,41 @@ public class GlobalExceptionHandler {
     return ResponseEntity
         .status(CommonStatusCode.INTERNAL_SERVER_ERROR.getHttpStatus())
         .body(ApiResponse.error(CommonStatusCode.INTERNAL_SERVER_ERROR.getHttpStatus(), error));
+  }
+
+  // 업로드 용량초과
+  @ExceptionHandler(MaxUploadSizeExceededException.class)
+  public ResponseEntity<ApiResponse<Void>> handleMaxUploadSizeExceeded(MaxUploadSizeExceededException ex) {
+    ErrorResponse error = ErrorResponse.of(
+            CommonStatusCode.INVALID_ARGUMENT.getCode(),
+            "업로드 가능한 파일 크기를 초과했습니다."
+    );
+    return ResponseEntity
+            .status(CommonStatusCode.INVALID_ARGUMENT.getHttpStatus())
+            .body(ApiResponse.error(CommonStatusCode.INVALID_ARGUMENT.getHttpStatus(), error));
+  }
+
+  // json파싱 바인딩 실패
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  public ResponseEntity<ApiResponse<Void>> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
+    ErrorResponse error = ErrorResponse.of(
+            CommonStatusCode.INVALID_ARGUMENT.getCode(),
+            "요청 본문을 해석할 수 없습니다. JSON 형식을 확인하세요."
+    );
+    return ResponseEntity
+            .status(CommonStatusCode.INVALID_ARGUMENT.getHttpStatus())
+            .body(ApiResponse.error(CommonStatusCode.INVALID_ARGUMENT.getHttpStatus(), error));
+  }
+
+  // DB 제약 위반
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public ResponseEntity<ApiResponse<Void>> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+    ErrorResponse error = ErrorResponse.of(
+            CommonStatusCode.INVALID_ARGUMENT.getCode(),
+            "데이터 제약 조건을 위반했습니다."
+    );
+    return ResponseEntity
+            .status(CommonStatusCode.INVALID_ARGUMENT.getHttpStatus())
+            .body(ApiResponse.error(CommonStatusCode.INVALID_ARGUMENT.getHttpStatus(), error));
   }
 }
