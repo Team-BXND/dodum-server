@@ -31,8 +31,6 @@ public class LocalStorageService implements StorageService {
             Path dest = Path.of(uploadDir).resolve(key);
 
             Files.copy(file.getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
-            // 저장 경로 로그
-            System.out.println("[LOCAL STORAGE] Saved: " + dest.toAbsolutePath());
 
             return baseUrl + key;
         } catch (IOException e) {

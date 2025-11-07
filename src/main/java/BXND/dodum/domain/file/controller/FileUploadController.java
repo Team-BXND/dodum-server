@@ -1,8 +1,10 @@
-package BXND.dodum.domain.file;
+package BXND.dodum.domain.file.controller;
 
-import BXND.dodum.global.storage.StorageService;
+import BXND.dodum.domain.file.dto.UploadRes;
+import BXND.dodum.domain.file.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,14 +13,11 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/files")
 public class FileUploadController {
 
-    private final StorageService storage;
+    private final FileService fileService;
 
     @PostMapping("/upload")
     @PreAuthorize("isAuthenticated()")
-    public UploadRes upload(@RequestPart("file") MultipartFile file) {
-        String url = storage.upload(file);
-        return new UploadRes("OK", url);
+    public UploadRes upload(@RequestPart("file") MultipartFile file, Authentication auth) {
+        return fileService.upload(file, auth.getName());
     }
-
-    public record UploadRes(String status, String url) {}
 }
