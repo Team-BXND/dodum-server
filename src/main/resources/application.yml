@@ -35,6 +35,12 @@ spring:
     access-expiration: ${JWT_ACCESS_EXPIRATION}
     refresh-expiration: ${JWT_REFRESH_EXPIRATION}
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  file:
+    upload-dir: ./uploads/images
 
 server:
   port: ${PORT}
