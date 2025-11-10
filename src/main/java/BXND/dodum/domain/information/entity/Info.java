@@ -2,6 +2,8 @@ package BXND.dodum.domain.information.entity;
 
 import BXND.dodum.domain.auth.entity.Users;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -17,8 +19,11 @@ public class Info {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     private String title;
     private String subtitle;
+    @Column(columnDefinition = "TEXT")
+    @NotBlank
     private String content;
 
     @Column(nullable = false)
@@ -29,8 +34,9 @@ public class Info {
     @Builder.Default
     private List<String> imageUrls = new ArrayList<>();
 
+    @OneToMany(mappedBy = "info", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private int likes = 0;
+    private List<InfoLike> infoLikes = new ArrayList<>();
 
     @Builder.Default
     private int views = 0;
@@ -56,17 +62,12 @@ public class Info {
         this.views++;
     }
 
-    public void incrementLikes() {
-        this.likes++;
-    }
-
-    public void decrementLikes() {
-        if (this.likes > 0) {
-            this.likes--;
-        }
-    }
-
     public int getCommentCount() {
         return infoComments.size();
     }
+
+    public int getLikesCount() {
+        return infoLikes.size();
+    }
+
 }

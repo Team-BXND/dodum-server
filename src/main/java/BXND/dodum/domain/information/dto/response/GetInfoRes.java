@@ -19,7 +19,7 @@ public record GetInfoRes(
                 info.getId(),
                 info.getTitle(),
                 info.getSubtitle(),
-                info.getLikes(),
+                info.getLikesCount(),
                 info.getViews(),
                 info.getCommentCount(),
                 info.getImageUrls(),

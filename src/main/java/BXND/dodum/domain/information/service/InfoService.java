@@ -77,7 +77,7 @@ public class InfoService {
                         info.getId(),
                         info.getTitle(),
                         info.getSubtitle(),
-                        info.getLikes(),
+                        info.getLikesCount(),
                         info.getViews(),
                         info.getCommentCount(),
                         info.getImageUrls(),
@@ -98,7 +98,7 @@ public class InfoService {
         List<CommentRes> comments = info.getInfoComments().stream()
                 .map(comment -> {
                     Users authors = comment.getAuthor();
-                    String authorInfos = ((author.getGrade() * 1000) + (author.getClass_no() * 100) + author.getStudent_no()) + " " + author.getUsername();
+                    String authorInfos = ((authors.getGrade() * 1000) + (authors.getClass_no() * 100) + authors.getStudent_no()) + " " + authors.getUsername();
                     return new CommentRes(
                             comment.getContent(),
                             authorInfos,
@@ -201,26 +201,19 @@ public class InfoService {
         Info info = infoRepository.findById(id)
                 .orElseThrow(() -> new InfoException(InfoStatusCode.INFO_NOT_FOUND));
 
-        // 이미 좋아요를 눌렀는지 확인
         boolean alreadyLiked = infoLikeRepository.existsByInfoAndUsers(info, user);
 
         if (alreadyLiked) {
-            // 좋아요 취소
             InfoLike infoLike = infoLikeRepository.findByInfoAndUsers(info, user)
                     .orElseThrow(() -> new InfoException(InfoStatusCode.INFO_NOT_FOUND));
             infoLikeRepository.delete(infoLike);
-            info.decrementLikes();
-            infoRepository.save(info);
             return ApiResponse.ok("좋아요를 취소했습니다.");
         } else {
-            // 좋아요 추가
             InfoLike infoLike = InfoLike.builder()
                     .info(info)
                     .users(user)
                     .build();
             infoLikeRepository.save(infoLike);
-            info.incrementLikes();
-            infoRepository.save(info);
             return ApiResponse.ok("좋아요를 눌렀습니다.");
         }
     }

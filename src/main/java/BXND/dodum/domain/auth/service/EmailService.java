@@ -64,7 +64,6 @@ public class EmailService {
         ValueOperations<String, String> valueOperations = redisConfig.redisTemplate().opsForValue();
         String code = valueOperations.get(email);
         if(Objects.equals(code, authNum)){
-            // 인증 성공 시 Redis에서 인증 코드 삭제
             redisConfig.redisTemplate().delete(email);
             return ApiResponse.ok("이메일 인증 성공");
         }

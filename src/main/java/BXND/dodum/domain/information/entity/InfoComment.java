@@ -2,6 +2,7 @@ package BXND.dodum.domain.information.entity;
 
 import BXND.dodum.domain.auth.entity.Users;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ public class InfoComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     private String content;
 
     @Column(nullable = false, updatable = false)

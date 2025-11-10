@@ -1,6 +1,8 @@
 package BXND.dodum.domain.auth.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
@@ -15,10 +17,14 @@ public class Users {
     private Long id;
 
     @Column(length = 45, nullable = false)
+    @NotBlank
     private String username;
     @Column(nullable = false)
+    @NotBlank
     private String password;
+    @NotBlank
     @Column(nullable = false)
+    @Email
     private String email;
     @Column(length = 45, nullable = false)
     private String phone;
