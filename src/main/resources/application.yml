@@ -35,6 +35,5 @@ spring:
     access-expiration: ${JWT_ACCESS_EXPIRATION}
     refresh-expiration: ${JWT_REFRESH_EXPIRATION}
 
-
 server:
   port: ${PORT}

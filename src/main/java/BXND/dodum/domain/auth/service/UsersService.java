@@ -53,12 +53,12 @@ public class UsersService {
                 users.getRole()
         );
         String accessToken = tokenUseCase.generateAccessToken(generateTokenRequest, response);
-        String RefreshToken =  tokenUseCase.generateRefreshToken(generateTokenRequest, response);
-        return ApiResponse.ok(new SignInResponse(accessToken, RefreshToken));
+        String refreshToken =  tokenUseCase.generateRefreshToken(generateTokenRequest, response);
+        return ApiResponse.ok(new SignInResponse(accessToken, refreshToken));
     }
 
-    public ApiResponse<String> signOut(SignOutRequest request) {
-        tokenUseCase.deleteTokens(request);
+    public ApiResponse<String> signOut(SignOutRequest request, HttpServletResponse response) {
+        tokenUseCase.deleteTokens(request, response);
         return ApiResponse.ok("로그아웃이 정상적으로 처리되었습니다.");
     }
 
