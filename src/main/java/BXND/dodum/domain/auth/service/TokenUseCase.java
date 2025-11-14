@@ -78,7 +78,7 @@ public class TokenUseCase {
         throw new AuthException(AuthStatusCode.INVALID_JWT);
     }
 
-    public void deleteTokens(SignOutRequest request) {
+    public void deleteTokens(SignOutRequest request, HttpServletResponse response) {
         ValueOperations<String, String> valueOperations = redisConfig.redisTemplate().opsForValue();
         String savedAccessToken = valueOperations.get("accessToken:" + request.username());
         String savedRefreshToken = valueOperations.get("refreshToken:" + request.username());
@@ -87,5 +87,18 @@ public class TokenUseCase {
         }
         redisConfig.redisTemplate().delete("accessToken:" + request.username());
         redisConfig.redisTemplate().delete("refreshToken:" + request.username());
+
+
+        Cookie accessTokenCookie = new Cookie("accessToken", null);
+        accessTokenCookie.setPath("/");
+        accessTokenCookie.setHttpOnly(false);
+        accessTokenCookie.setMaxAge(0);
+        response.addCookie(accessTokenCookie);
+
+        Cookie refreshTokenCookie = new Cookie("refreshToken", null);
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setMaxAge(0);
+        response.addCookie(refreshTokenCookie);
     }
 }
