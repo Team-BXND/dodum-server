@@ -28,6 +28,7 @@ public class Users {
     @Column(nullable = false)
     @Email
     private String email;
+    @NotBlank(message = "전화번호는 필수입니다.")
     @Column(length = 45, nullable = false)
     private String phone;
     @Column(length = 45)
