@@ -56,10 +56,10 @@ public class InfoService {
 
         Info info = Info.builder()
                 .title(request.title())
-                .subtitle(request.subTitle())
+                .subTitle(request.subTitle())
                 .content(request.content())
                 .createdAt(date)
-                .authors(user)
+                .author(user)
                 .build();
 
         infoRepository.save(info);
@@ -73,16 +73,20 @@ public class InfoService {
         Page<Info> infoPage = infoRepository.findAllByIsApprovedTrue(pageable);
 
         List<GetInfoRes> responses = infoPage.getContent().stream()
-                .map(info -> new GetInfoRes(
-                        info.getId(),
-                        info.getTitle(),
-                        info.getSubtitle(),
-                        info.getLikesCount(),
-                        info.getViews(),
-                        info.getCommentCount(),
-                        info.getImageUrls(),
-                        info.getCreatedAt()
-                ))
+                .map(info -> {
+                    Users author = info.getAuthor();
+                    String authorInfo = author.getAuthor();
+                    return new GetInfoRes(
+                            info.getId(),
+                            info.getTitle(),
+                            authorInfo,
+                            info.getLikesCount(),
+                            info.getViews(),
+                            info.getCommentCount(),
+                            info.getImageUrls(),
+                            info.getCreatedAt()
+                    );
+                })
                 .collect(Collectors.toList());
 
         return ApiResponse.ok(responses);
@@ -92,16 +96,16 @@ public class InfoService {
         Info info = infoRepository.findByIdAndIsApprovedTrue(id)
                 .orElseThrow(() -> new InfoException(InfoStatusCode.INFO_NOT_FOUND));
 
-        Users author = info.getAuthors();
-        String authorInfo = ((author.getGrade() * 1000) + (author.getClass_no() * 100) + author.getStudent_no()) + author.getUsername();
+        Users author = info.getAuthor();
+        String authorInfo = author.getAuthor();
 
         List<CommentRes> comments = info.getInfoComments().stream()
                 .map(comment -> {
-                    Users authors = comment.getAuthor();
-                    String authorInfos = ((authors.getGrade() * 1000) + (authors.getClass_no() * 100) + authors.getStudent_no()) + " " + authors.getUsername();
+                    Users commentAuthor = comment.getAuthor();
+                    String commentAuthorInfo = commentAuthor.getAuthor();
                     return new CommentRes(
                             comment.getContent(),
-                            authorInfos,
+                            commentAuthorInfo,
                             comment.getCreatedAt()
                     );
                 })
@@ -116,13 +120,13 @@ public class InfoService {
     public ApiResponse<String> updateInfo(Long id, CreateInfoReq request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        Users users = usersRepository.findByUsername(auth.getName())
+        Users user = usersRepository.findByUsername(auth.getName())
                 .orElseThrow(() -> new AuthException(AuthStatusCode.USER_NOT_FOUND));
         Info info = infoRepository.findById(id)
                 .orElseThrow(() -> new InfoException(InfoStatusCode.INFO_NOT_FOUND));
-        Users author = info.getAuthors();
+        Users author = info.getAuthor();
 
-        if(users.getRole().isAdminOrTeacher() || Objects.equals(author.getId(), users.getId())) {
+        if (user.getRole().isAdminOrTeacher() || Objects.equals(author.getId(), user.getId())) {
             info.update(request.title(), request.subTitle(), request.content());
 
             infoRepository.save(info);
@@ -136,13 +140,13 @@ public class InfoService {
     public ApiResponse<String> deleteInfo(Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        Users users = usersRepository.findByUsername(auth.getName())
+        Users user = usersRepository.findByUsername(auth.getName())
                 .orElseThrow(() -> new AuthException(AuthStatusCode.USER_NOT_FOUND));
         Info info = infoRepository.findById(id)
                 .orElseThrow(() -> new InfoException(InfoStatusCode.INFO_NOT_FOUND));
-        Users author = info.getAuthors();
+        Users author = info.getAuthor();
 
-        if(users.getRole().isAdminOrTeacher() || Objects.equals(author.getId(), users.getId())) {
+        if (user.getRole().isAdminOrTeacher() || Objects.equals(author.getId(), user.getId())) {
             infoRepository.delete(info);
 
             return ApiResponse.ok("글이 삭제되었습니다.");
@@ -177,10 +181,10 @@ public class InfoService {
     @Transactional
     public ApiResponse<String> isApproved(Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Users users = usersRepository.findByUsername(auth.getName())
+        Users user = usersRepository.findByUsername(auth.getName())
                 .orElseThrow(() -> new AuthException(AuthStatusCode.USER_NOT_FOUND));
 
-        if (!users.getRole().isAdminOrTeacher()) {
+        if (!user.getRole().isAdminOrTeacher()) {
             throw new AuthException(AuthStatusCode.ACCESS_DENIED);
         }
 
@@ -195,26 +199,25 @@ public class InfoService {
     @Transactional
     public ApiResponse<String> toggleLike(Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
         Users user = usersRepository.findByUsername(auth.getName())
                 .orElseThrow(() -> new AuthException(AuthStatusCode.USER_NOT_FOUND));
-
         Info info = infoRepository.findById(id)
                 .orElseThrow(() -> new InfoException(InfoStatusCode.INFO_NOT_FOUND));
 
-        boolean alreadyLiked = infoLikeRepository.existsByInfoAndUsers(info, user);
+        boolean alreadyLiked = infoLikeRepository.existsByInfoAndUser(info, user);
 
         if (alreadyLiked) {
-            InfoLike infoLike = infoLikeRepository.findByInfoAndUsers(info, user)
+            InfoLike infoLike = infoLikeRepository.findByInfoAndUser(info, user)
                     .orElseThrow(() -> new InfoException(InfoStatusCode.INFO_NOT_FOUND));
             infoLikeRepository.delete(infoLike);
             return ApiResponse.ok("좋아요를 취소했습니다.");
-        } else {
+        }
             InfoLike infoLike = InfoLike.builder()
                     .info(info)
-                    .users(user)
+                    .user(user)
                     .build();
             infoLikeRepository.save(infoLike);
             return ApiResponse.ok("좋아요를 눌렀습니다.");
-        }
     }
 }

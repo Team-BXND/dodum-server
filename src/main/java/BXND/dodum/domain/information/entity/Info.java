@@ -3,7 +3,6 @@ package BXND.dodum.domain.information.entity;
 import BXND.dodum.domain.auth.entity.Users;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -19,11 +18,11 @@ public class Info {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "제목은 필수 입력입니다.")
     private String title;
-    private String subtitle;
+    private String subTitle;
     @Column(columnDefinition = "TEXT")
-    @NotBlank
+    @NotBlank(message = "글의 내용은 필수 입력입니다.")
     private String content;
 
     @Column(nullable = false)
@@ -50,11 +49,11 @@ public class Info {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
-    private Users authors;
+    private Users author;
 
     public void update(String title, String subtitle, String content) {
         this.title = title;
-        this.subtitle = subtitle;
+        this.subTitle = subtitle;
         this.content = content;
     }
 

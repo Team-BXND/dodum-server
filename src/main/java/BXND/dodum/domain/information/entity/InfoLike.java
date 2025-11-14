@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Table(uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"info_id", "users_id"})
+        @UniqueConstraint(columnNames = {"info_id", "user_id"})
 })
 public class InfoLike {
 
@@ -23,6 +23,6 @@ public class InfoLike {
     private Info info;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_id", nullable = false)
-    private Users users;
+    @JoinColumn(name = "user_id", nullable = false)
+    private Users user;
 }

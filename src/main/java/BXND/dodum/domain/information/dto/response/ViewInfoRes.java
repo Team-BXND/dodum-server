@@ -11,18 +11,23 @@ public record ViewInfoRes(
     List<String> imageUrls,
     String author,
     String createdAt,
-    List<CommentRes> comments
+    List<CommentRes> comments,
+    int likes,
+    int views,
+    int commentCount
 ) {
     public  static ViewInfoRes of(Info info, String author, List<CommentRes> comments) {
         return new ViewInfoRes(
                 info.getTitle(),
-                info.getSubtitle(),
+                info.getSubTitle(),
                 info.getContent(),
                 info.getImageUrls(),
                 author,
                 info.getCreatedAt(),
-                comments
-
+                comments,
+                info.getLikesCount(),
+                info.getViews(),
+                info.getCommentCount()
         );
     }
 }

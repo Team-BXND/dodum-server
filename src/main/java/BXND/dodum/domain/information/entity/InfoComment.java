@@ -17,10 +17,10 @@ public class InfoComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "댓글 내용은 필수입니다.")
     private String content;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private String createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)

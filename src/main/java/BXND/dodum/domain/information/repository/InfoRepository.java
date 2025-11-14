@@ -10,7 +10,6 @@ import java.util.Optional;
 
 public interface InfoRepository extends JpaRepository<Info, Long> {
     Page<Info> findAllByIsApprovedTrue(Pageable pageable);
-    Page<Info> findAllByIsApprovedTrueAndTitle(String title, Pageable pageable);
 
     Optional<Info> findByIdAndIsApprovedTrue(Long id);
 }

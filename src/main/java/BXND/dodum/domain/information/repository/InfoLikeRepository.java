@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface InfoLikeRepository extends JpaRepository<InfoLike, Long> {
-    Optional<InfoLike> findByInfoAndUsers(Info info, Users users);
-    boolean existsByInfoAndUsers(Info info, Users users);
+    Optional<InfoLike> findByInfoAndUser(Info info, Users user);
+    boolean existsByInfoAndUser(Info info, Users user);
 }
