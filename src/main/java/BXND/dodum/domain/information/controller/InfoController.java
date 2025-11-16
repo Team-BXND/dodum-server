@@ -2,10 +2,11 @@ package BXND.dodum.domain.information.controller;
 
 import BXND.dodum.domain.information.dto.request.CommentReq;
 import BXND.dodum.domain.information.dto.request.CreateInfoReq;
-import BXND.dodum.domain.information.dto.response.CommentRes;
 import BXND.dodum.domain.information.dto.response.GetInfoRes;
 import BXND.dodum.domain.information.dto.response.ViewInfoRes;
+import BXND.dodum.domain.information.service.CommentUseCase;
 import BXND.dodum.domain.information.service.InfoService;
+import BXND.dodum.domain.information.service.LikeUseCase;
 import BXND.dodum.global.data.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,8 @@ import java.util.List;
 @RequestMapping("/info")
 public class InfoController {
     private final InfoService infoService;
+    private final LikeUseCase likeService;
+    private final CommentUseCase commentService;
 
     @GetMapping
     public ApiResponse<List<GetInfoRes>> getAllInformation(@RequestParam(defaultValue = "0") int page) {
@@ -45,7 +48,7 @@ public class InfoController {
 
     @PostMapping("/{id}/comment")
     public ApiResponse<String> addComment(@PathVariable Long id, @RequestBody CommentReq commentReq) {
-        return infoService.InfoComment(id, commentReq);
+        return commentService.createComment(id, commentReq);
     }
 
     @PostMapping("/{id}/approve")
@@ -55,6 +58,6 @@ public class InfoController {
 
     @PostMapping("/{id}/like")
     public ApiResponse<String> toggleLike(@PathVariable Long id) {
-        return infoService.toggleLike(id);
+        return likeService.toggleLike(id);
     }
 }
