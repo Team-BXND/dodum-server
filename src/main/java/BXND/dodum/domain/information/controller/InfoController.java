@@ -23,7 +23,7 @@ public class InfoController {
 
     @GetMapping
     public ApiResponse<List<GetInfoRes>> getAllInformation(@RequestParam(defaultValue = "0") int page) {
-        return infoService.getAllInformation(page);
+        return infoService.getAllInfo(page);
     }
 
     @PostMapping
@@ -43,7 +43,7 @@ public class InfoController {
 
     @GetMapping("/{id}")
     public ApiResponse<ViewInfoRes> viewInfo(@PathVariable Long id) {
-        return infoService.viewInformation(id);
+        return infoService.viewInfo(id);
     }
 
     @PostMapping("/{id}/comment")
@@ -52,8 +52,8 @@ public class InfoController {
     }
 
     @PostMapping("/{id}/approve")
-    public ApiResponse<?> isApproved(@PathVariable Long id) {
-        return infoService.isApproved(id);
+    public ApiResponse<?> approveInfo(@PathVariable Long id) {
+        return infoService.approveInfo(id);
     }
 
     @PostMapping("/{id}/like")

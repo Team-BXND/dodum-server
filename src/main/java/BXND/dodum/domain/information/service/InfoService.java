@@ -62,7 +62,7 @@ public class InfoService {
         return ApiResponse.ok("새 글이 작성되었습니다.");
     }
 
-    public ApiResponse<List<GetInfoRes>> getAllInformation(int page) {
+    public ApiResponse<List<GetInfoRes>> getAllInfo(int page) {
         Sort sort = Sort.by(Sort.Direction.DESC, SORT_BY);
 
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
@@ -71,7 +71,7 @@ public class InfoService {
         List<GetInfoRes> responses = infoPage.getContent().stream()
                 .map(info -> {
                     Users author = info.getAuthor();
-                    String authorInfo = author.getAuthor();
+                    String authorInfo = author.getDisplayedName();
                     return new GetInfoRes(
                             info.getId(),
                             info.getTitle(),
@@ -89,17 +89,17 @@ public class InfoService {
     }
 
     @Transactional
-    public ApiResponse<ViewInfoRes> viewInformation(Long id) {
+    public ApiResponse<ViewInfoRes> viewInfo(Long id) {
         Info info = infoRepository.findByIdAndIsApprovedTrue(id)
                 .orElseThrow(() -> new InfoException(InfoStatusCode.INFO_NOT_FOUND));
 
         Users author = info.getAuthor();
-        String authorInfo = author.getAuthor();
+        String authorInfo = author.getDisplayedName();
 
         List<CommentRes> comments = info.getInfoComments().stream()
                 .map(comment -> {
                     Users commentAuthor = comment.getAuthor();
-                    String commentAuthorInfo = commentAuthor.getAuthor();
+                    String commentAuthorInfo = commentAuthor.getDisplayedName();
                     return new CommentRes(
                             comment.getContent(),
                             commentAuthorInfo,
@@ -148,7 +148,7 @@ public class InfoService {
     }
 
     @Transactional
-    public ApiResponse<String> isApproved(Long id) {
+    public ApiResponse<String> approveInfo(Long id) {
         Users user = getUser();
 
         if (!user.getRole().isAdminOrTeacher()) {
