@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class ProfileService {
@@ -33,9 +35,11 @@ public class ProfileService {
 
         Users user = usersRepository.findById(id)
                 .orElseThrow(() -> new AuthException(AuthStatusCode.USER_NOT_FOUND));
-        if (!auth.getName().equals(user.getUsername())) {
+
+        if (!Objects.equals(auth.getName(), user.getUsername())) {
             throw new AuthException(AuthStatusCode.ACCESS_DENIED);
         }
+
         user.updateProfile(request);
         usersRepository.save(user);
         return ApiResponse.ok("프로필이 수정되었습니다.");

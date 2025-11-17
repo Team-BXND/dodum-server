@@ -1,5 +1,6 @@
 package BXND.dodum.domain.profile.dto.response;
 
+import BXND.dodum.domain.auth.entity.Club;
 import BXND.dodum.domain.auth.entity.Users;
 
 public record ProfileRes(
@@ -9,7 +10,7 @@ public record ProfileRes(
         int grade,
         int class_no,
         int student_no,
-        String club,
+        Club club,
         Long countComment
 ) {
     public static ProfileRes of(Users user, Long countComment) {

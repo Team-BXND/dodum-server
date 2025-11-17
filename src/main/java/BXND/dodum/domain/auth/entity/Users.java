@@ -28,9 +28,9 @@ public class Users {
     @Column(nullable = false)
     @Email
     private String email;
+    @NotBlank(message = "전화번호는 필수입니다.")
     @Column(length = 45, nullable = false)
     private String phone;
-
     @Column(length = 45)
     private String major;
     private int grade;
@@ -40,12 +40,11 @@ public class Users {
     @Column(columnDefinition = "TEXT")
     private String profile = "http://localhost:8080/dodum/images/profile.png";
     @Column(length = 45)
-    private String club;
+    private Club club;
     @Column(columnDefinition = "TEXT")
     private String history;
 
-    @Builder.Default
-    private Role role = Role.ADMIN;
+    private Role role;
 
     public void updateProfile(UpdateProfileReq request) {
         this.club = request.club();
@@ -56,7 +55,7 @@ public class Users {
         this.grade = request.grade();
     }
 
-    public String getAuthor() {
+    public String getDisplayedName() {
         int studentNumber = (this.grade * 1000) + (this.class_no * 100) + this.student_no;
         return studentNumber + " " + this.username;
     }
