@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,14 +29,20 @@ import java.util.stream.Collectors;
 public class ContestService {
     private final ContestRepository contestRepository;
     private final UsersRepository usersRepository;
-    final int size = 10;
-    final String sortBy = "id";
+
+    private static final int PAGE_SIZE = 10;
+    private static final String SORT_BY = "id";
+
+    public Users getUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return usersRepository.findByUsername(auth.getName())
+                .orElseThrow(() -> new ContestException(ContestStatusCode.USER_NOT_FOUND));
+    }
+
 
     @Transactional
     public ApiResponse<String> createContest(CreateContestReq request) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Users user = usersRepository.findByUsername(auth.getName())
-                .orElseThrow(() -> new ContestException(ContestStatusCode.USER_NOT_FOUND));
+        Users user = getUser();
 
         Contest contest = Contest.builder()
                 .title(request.title())
@@ -47,15 +54,16 @@ public class ContestService {
                 .content(request.content())
                 .author(user)
                 .build();
+
         contestRepository.save(contest);
         return ApiResponse.ok("대회가 등록되었습니다.");
     }
 
     @Transactional
     public ApiResponse<List<GetContestRes>> getAllContests(int page) {
-        Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
+        Sort sort = Sort.by(Sort.Direction.DESC, SORT_BY);
 
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
         Page<Contest> contestPage = contestRepository.findAll(pageable);
 
         List<GetContestRes> responses = contestPage.getContent().stream()
@@ -79,15 +87,15 @@ public class ContestService {
         return ApiResponse.ok(ViewContestRes.of(contest));
     }
 
+    @Transactional
     public ApiResponse<String> updateContest(Long id, CreateContestReq request) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         Contest contest = contestRepository.findById(id)
                 .orElseThrow(() -> new ContestException(ContestStatusCode.CONTEST_NOT_FOUND));
-        Users users = usersRepository.findByUsername(auth.getName())
-                .orElseThrow(() -> new ContestException(ContestStatusCode.USER_NOT_FOUND));
-        Users user = contest.getAuthor();
-        if(user.getUsername() == users.getUsername() || users.getRole().isAdminOrTeacher()) {
+
+        Users user = getUser();
+        Users author = contest.getAuthor();
+
+        if(Objects.equals(author.getId(), user.getId()) || user.getRole().isAdminOrTeacher()) {
             contest.updateContest(request);
             contestRepository.save(contest);
             return ApiResponse.ok("대회정보가 수정되었습니다.");
@@ -95,15 +103,15 @@ public class ContestService {
         throw new ContestException(ContestStatusCode.UNAUTHORIZED);
     }
 
+    @Transactional
     public ApiResponse<String> deleteContest(Long id) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         Contest contest = contestRepository.findById(id)
                 .orElseThrow(() -> new ContestException(ContestStatusCode.CONTEST_NOT_FOUND));
+
+        Users user = getUser();
         Users author = contest.getAuthor();
-        Users user = usersRepository.findByUsername(auth.getName())
-                .orElseThrow(() -> new ContestException(ContestStatusCode.USER_NOT_FOUND));
-        if(author.getId() == user.getId() || user.getRole().isAdminOrTeacher()) {
+
+        if(Objects.equals(author.getId(), user.getId()) || user.getRole().isAdminOrTeacher()) {
             contestRepository.delete(contest);
             return ApiResponse.ok("대회정보가 삭제되었습니다.");
         }
