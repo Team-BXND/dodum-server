@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,17 +65,7 @@ public class ContestService {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
         Page<Contest> contestPage = contestRepository.findAll(pageable);
 
-        List<GetContestRes> responses = contestPage.getContent().stream()
-                .map(contest -> new GetContestRes(
-                        contest.getId(),
-                        contest.getTitle(),
-                        contest.getSubTitle(),
-                        contest.getPlace(),
-                        contest.getPhone(),
-                        contest.getEmail(),
-                        contest.getTime()
-                ))
-                .collect(Collectors.toList());
+        List<GetContestRes> responses = GetContestRes.ofList(contestPage.getContent());
         return ApiResponse.ok(responses);
     }
 
