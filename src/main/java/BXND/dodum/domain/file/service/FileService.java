@@ -1,14 +1,23 @@
 package BXND.dodum.domain.file.service;
 
-import BXND.dodum.domain.file.dto.UploadRes;
+import BXND.dodum.domain.file.dto.response.UploadRes;
 import BXND.dodum.domain.file.entity.FileRecord;
+import BXND.dodum.domain.file.entity.FileStatus;
 import BXND.dodum.domain.file.repository.FileRecordRepository;
 import BXND.dodum.global.storage.StorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Files;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -45,5 +54,52 @@ public class FileService {
                 .url(saved.getUrl())
                 .createdAt(saved.getCreatedAt())
                 .build();
+    }
+
+    @Transactional
+    public void attachFiles(String requesterId, String entityType, String entityId, List<Long> fileIds) {
+        if (!StringUtils.hasText(requesterId)) throw new IllegalArgumentException("요청자 정보 없음");
+        if (!StringUtils.hasText(entityType) || !StringUtils.hasText(entityId)) return;
+        if (fileIds == null || fileIds.isEmpty()) return;
+
+        Set<Long> keep = new HashSet<>(fileIds);
+
+        List<FileRecord> myPending = fileRepo.findAllByUploaderIdAndStatus(requesterId, FileStatus.PENDING);
+        for (FileRecord fr : myPending) {
+            if (keep.contains(fr.getId())) {
+                fr.attachTo(entityType, entityId);
+            }
+        }
+    }
+
+    @Transactional
+    public void deleteOne(Long fileId) {
+        FileRecord fr = fileRepo.findById(fileId)
+                .orElseThrow(() -> new IllegalArgumentException("파일을 찾을 수 없습니다."));
+
+        try {
+            storage.delete(fr.getUrl());
+            fileRepo.delete(fr);
+        } catch (Exception e) {
+            fr.softDelete();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<Resource> serveFile(String keyName) {
+        FileRecord fr = fileRepo.findByKeyName(keyName)
+                .orElseThrow(() -> new IllegalArgumentException("파일을 찾을 수 없습니다."));
+        Resource resource = storage.loadAsResource(fr.getKeyName());
+        String contentType = null;
+        try {
+            contentType = Files.probeContentType(resource.getFile().toPath());
+        } catch (Exception ignore) {}
+
+        if (contentType == null) {
+            contentType = "application/octet-stream";
+        }
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(resource);
     }
 }

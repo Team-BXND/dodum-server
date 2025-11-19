@@ -40,6 +40,8 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**", "/email/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/files/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/files/upload").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/files/attach").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/files/**").authenticated()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )

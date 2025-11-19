@@ -23,7 +23,7 @@ public class ArchiveService {
 
     private final ArchiveRepository repo;
 
-    private String currentUserId() {
+    private String currentUserId() { // 사용자 id가져오는거
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getName())) {
             throw new ArchiveException(ArchiveStatusCode.UNAUTHENTICATED);
@@ -31,7 +31,7 @@ public class ArchiveService {
         return auth.getName();
     }
 
-    private boolean hasAnyRole(String... roles) {
+    private boolean hasAnyRole(String... roles) { // 권환 가지고있는지 검사
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || auth.getAuthorities() == null) return false;
         for (GrantedAuthority ga : auth.getAuthorities()) {
@@ -42,7 +42,7 @@ public class ArchiveService {
         return false;
     }
 
-    private void assertCanModify(ArchivePost p) {
+    private void assertCanModify(ArchivePost p) { // 수정 삭제관련 권환확인
         String me = currentUserId();
         boolean owner = me.equals(p.getAuthorId());
         boolean admin = hasAnyRole("ROLE_ADMIN", "ROLE_TEACHER");

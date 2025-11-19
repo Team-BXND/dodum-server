@@ -1,4 +1,4 @@
-package BXND.dodum.domain.file.dto;
+package BXND.dodum.domain.file.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
