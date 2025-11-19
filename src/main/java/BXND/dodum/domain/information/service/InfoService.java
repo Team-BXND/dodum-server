@@ -5,7 +5,6 @@ import BXND.dodum.domain.auth.exception.AuthException;
 import BXND.dodum.domain.auth.exception.AuthStatusCode;
 import BXND.dodum.domain.auth.repository.UsersRepository;
 import BXND.dodum.domain.information.dto.request.CreateInfoReq;
-import BXND.dodum.domain.information.dto.response.CommentRes;
 import BXND.dodum.domain.information.dto.response.GetInfoRes;
 import BXND.dodum.domain.information.dto.response.ViewInfoRes;
 import BXND.dodum.domain.information.entity.Info;
@@ -65,28 +64,28 @@ public class InfoService {
         return ApiResponse.ok("새 글이 작성되었습니다.");
     }
 
-    public ApiResponse<List<GetInfoRes>> getAllInfo(int page) {
+    public ApiResponse<List<GetInfoRes>> getTrueAllInfo(int page) {
         Sort sort = Sort.by(Sort.Direction.DESC, SORT_BY);
 
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
         Page<Info> infoPage = infoRepository.findAllByIsApprovedTrue(pageable);
 
-        List<GetInfoRes> responses = infoPage.getContent().stream()
-                .map(info -> {
-                    Users author = info.getAuthor();
-                    String authorInfo = author.getDisplayedName();
-                    return new GetInfoRes(
-                            info.getId(),
-                            info.getTitle(),
-                            authorInfo,
-                            info.getLikesCount(),
-                            info.getViews(),
-                            info.getCommentCount(),
-                            info.getImageUrls(),
-                            info.getCreatedAt()
-                    );
-                })
-                .collect(Collectors.toList());
+        List<GetInfoRes> responses = GetInfoRes.fromPage(infoPage);
+
+        return ApiResponse.ok(responses);
+    }
+
+    public ApiResponse<List<GetInfoRes>> getFalseAllInfo(int page) {
+        Users  user = getUser();
+        if (!user.getRole().isAdminOrTeacher()) {
+            throw new InfoException(InfoStatusCode.UNAUTHORIZED);
+        }
+        Sort sort = Sort.by(Sort.Direction.DESC, SORT_BY);
+
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
+        Page<Info> infoPage = infoRepository.findAllByIsApprovedFalse(pageable);
+
+        List<GetInfoRes> responses = GetInfoRes.fromPage(infoPage);
 
         return ApiResponse.ok(responses);
     }
@@ -99,21 +98,9 @@ public class InfoService {
         Users author = info.getAuthor();
         String authorInfo = author.getDisplayedName();
 
-        List<CommentRes> comments = info.getInfoComments().stream()
-                .map(comment -> {
-                    Users commentAuthor = comment.getAuthor();
-                    String commentAuthorInfo = commentAuthor.getDisplayedName();
-                    return new CommentRes(
-                            comment.getContent(),
-                            commentAuthorInfo,
-                            comment.getCreatedAt()
-                    );
-                })
-                .collect(Collectors.toList());
-
         info.incrementViews();
         infoRepository.save(info);
-        return ApiResponse.ok(ViewInfoRes.of(info, authorInfo, comments));
+        return ApiResponse.ok(ViewInfoRes.of(info, authorInfo));
     }
 
     @Transactional

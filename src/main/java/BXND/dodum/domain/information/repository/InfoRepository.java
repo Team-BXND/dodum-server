@@ -12,4 +12,6 @@ public interface InfoRepository extends JpaRepository<Info, Long> {
     Page<Info> findAllByIsApprovedTrue(Pageable pageable);
 
     Optional<Info> findByIdAndIsApprovedTrue(Long id);
+
+    Page<Info> findAllByIsApprovedFalse(Pageable pageable);
 }

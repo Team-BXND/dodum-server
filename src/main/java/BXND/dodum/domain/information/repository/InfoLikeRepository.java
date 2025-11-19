@@ -11,5 +11,4 @@ import java.util.Optional;
 @Repository
 public interface InfoLikeRepository extends JpaRepository<InfoLike, Long> {
     Optional<InfoLike> findByInfoAndUser(Info info, Users user);
-    boolean existsByInfoAndUser(Info info, Users user);
 }

@@ -40,6 +40,7 @@ public class CommentUseCase {
     public ApiResponse<String> createComment(Long id, CommentReq request) {
         Info info = infoRepository.findById(id)
                 .orElseThrow(() -> new InfoException(InfoStatusCode.INFO_NOT_FOUND));
+
         Users author = getUser();
         String date = LocalDateTime.now().format(DATE_FORMATTER);
 

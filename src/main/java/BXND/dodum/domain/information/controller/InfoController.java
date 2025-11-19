@@ -23,7 +23,12 @@ public class InfoController {
 
     @GetMapping
     public ApiResponse<List<GetInfoRes>> getAllInformation(@RequestParam(defaultValue = "0") int page) {
-        return infoService.getAllInfo(page);
+        return infoService.getTrueAllInfo(page);
+    }
+
+    @GetMapping("/false")
+    public ApiResponse<List<GetInfoRes>> getFalseInformation(@RequestParam(defaultValue = "0") int page) {
+        return infoService.getFalseAllInfo(page);
     }
 
     @PostMapping
