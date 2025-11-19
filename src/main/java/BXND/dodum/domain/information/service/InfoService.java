@@ -48,6 +48,9 @@ public class InfoService {
     @Transactional
     public ApiResponse<String> createInfo(CreateInfoReq request) {
         Users user = getUser();
+        if (user.getGrade() == 1) {
+            throw new InfoException(InfoStatusCode.UNAUTHORIZED);
+        }
         String date = LocalDateTime.now().format(DATE_FORMATTER);
 
         Info info = Info.builder()
@@ -127,7 +130,7 @@ public class InfoService {
 
             return ApiResponse.ok("글이 수정되었습니다.");
         }
-        throw new InfoException(InfoStatusCode.INFO_NO_PERMISSION);
+        throw new InfoException(InfoStatusCode.UNAUTHORIZED);
     }
 
     @Transactional
@@ -144,7 +147,7 @@ public class InfoService {
             return ApiResponse.ok("글이 삭제되었습니다.");
 
         }
-        throw new InfoException(InfoStatusCode.INFO_NO_PERMISSION);
+        throw new InfoException(InfoStatusCode.UNAUTHORIZED);
     }
 
     @Transactional

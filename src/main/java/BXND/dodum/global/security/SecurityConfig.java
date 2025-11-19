@@ -40,10 +40,10 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .formLogin(AbstractHttpConfigurer::disable)
-//            .authorizeHttpRequests(auth -> auth
-//                    .requestMatchers("/auth/**", "/email/**").permitAll()
-//                    .anyRequest().authenticated()
-//            )
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/auth/**", "/email/**").permitAll()
+                    .anyRequest().authenticated()
+            )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling(ex -> ex
                     .authenticationEntryPoint(customAuthenticationEntryPoint)
