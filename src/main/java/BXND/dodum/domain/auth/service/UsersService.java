@@ -3,6 +3,7 @@ package BXND.dodum.domain.auth.service;
 import BXND.dodum.domain.auth.dto.request.*;
 import BXND.dodum.domain.auth.dto.response.SignInResponse;
 import BXND.dodum.domain.auth.dto.response.reGenerateAccessTokenResponse;
+import BXND.dodum.domain.auth.entity.Role;
 import BXND.dodum.domain.auth.entity.Users;
 import BXND.dodum.domain.auth.exception.AuthException;
 import BXND.dodum.domain.auth.exception.AuthStatusCode;
@@ -39,6 +40,11 @@ public class UsersService {
                 .club(request.club())
                 .history(request.history())
                 .build();
+        if (user.getGrade() == 1) {
+            user.setRole(Role.STUDENT);
+        } else {
+            user.setRole(Role.SENIOR);
+        }
         usersRepository.save(user);
         return ApiResponse.ok("회원가입에 성공했습니다.");
     }
@@ -53,12 +59,12 @@ public class UsersService {
                 users.getRole()
         );
         String accessToken = tokenUseCase.generateAccessToken(generateTokenRequest, response);
-        String RefreshToken =  tokenUseCase.generateRefreshToken(generateTokenRequest, response);
-        return ApiResponse.ok(new SignInResponse(accessToken, RefreshToken));
+        String refreshToken =  tokenUseCase.generateRefreshToken(generateTokenRequest, response);
+        return ApiResponse.ok(new SignInResponse(accessToken, refreshToken));
     }
 
-    public ApiResponse<String> signOut(SignOutRequest request) {
-        tokenUseCase.deleteTokens(request);
+    public ApiResponse<String> signOut(SignOutRequest request, HttpServletResponse response) {
+        tokenUseCase.deleteTokens(request, response);
         return ApiResponse.ok("로그아웃이 정상적으로 처리되었습니다.");
     }
 
