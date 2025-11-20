@@ -33,8 +33,8 @@ public class AuthController {
     }
 
     @PostMapping("/signout")
-    public ApiResponse<String> SignOut(@RequestBody SignOutRequest request) {
-        return usersService.signOut(request);
+    public ApiResponse<String> SignOut(@RequestBody SignOutRequest request, HttpServletResponse response) {
+        return usersService.signOut(request, response);
     }
 
     @PostMapping("/refresh")
