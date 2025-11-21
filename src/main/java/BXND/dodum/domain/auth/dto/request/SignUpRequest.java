@@ -1,5 +1,6 @@
 package BXND.dodum.domain.auth.dto.request;
 
+import BXND.dodum.domain.auth.entity.Club;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,7 +19,7 @@ public record SignUpRequest(
         int grade,
         int class_no,
         int student_no,
-        String club,
+        Club club,
         String history
 ) {
 }

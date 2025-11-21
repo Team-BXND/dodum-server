@@ -40,7 +40,7 @@ public class Users {
     @Column(columnDefinition = "TEXT")
     private String profile = "http://localhost:8080/dodum/images/profile.png";
     @Column(length = 45)
-    private String club;
+    private Club club;
     @Column(columnDefinition = "TEXT")
     private String history;
 

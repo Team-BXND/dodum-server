@@ -207,3 +207,5 @@ Temporary Items
 *.icloud
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,java,macos
+
+/uploads/
