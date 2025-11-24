@@ -30,6 +30,7 @@ public class UsersService {
         if (usersRepository.existsByUsername(request.username()) || usersRepository.existsByEmail(request.email())) {
             throw new AuthException(AuthStatusCode.ALREADY_EXIST_ACCOUNT);
         }
+        Role role = (request.grade() == 1) ? Role.STUDENT : Role.SENIOR;
 
         Users user = Users.builder()
                 .username(request.username())
@@ -42,13 +43,9 @@ public class UsersService {
                 .student_no(request.student_no())
                 .club(request.club())
                 .history(request.history())
+                .role(role)
                 .build();
 
-        if (user.getGrade() == 1) {
-            user.setRole(Role.STUDENT);
-        } else {
-            user.setRole(Role.SENIOR);
-        }
         usersRepository.save(user);
         return ApiResponse.ok("회원가입에 성공했습니다.");
     }
