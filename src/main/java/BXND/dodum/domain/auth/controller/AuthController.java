@@ -1,9 +1,6 @@
 package BXND.dodum.domain.auth.controller;
 
-import BXND.dodum.domain.auth.dto.request.SignInRequest;
-import BXND.dodum.domain.auth.dto.request.SignOutRequest;
-import BXND.dodum.domain.auth.dto.request.SignUpRequest;
-import BXND.dodum.domain.auth.dto.request.reGenerateTokenRequest;
+import BXND.dodum.domain.auth.dto.request.*;
 import BXND.dodum.domain.auth.dto.response.SignInResponse;
 import BXND.dodum.domain.auth.dto.response.reGenerateAccessTokenResponse;
 import BXND.dodum.domain.auth.service.TokenUseCase;
@@ -40,5 +37,10 @@ public class AuthController {
     @PostMapping("/refresh")
     public ApiResponse<reGenerateAccessTokenResponse> reGenerateAccessToken(@RequestBody reGenerateTokenRequest request, HttpServletResponse response) {
         return usersService.refresh(request,response);
+    }
+
+    @PostMapping("/pwchange")
+    public ApiResponse<String> changePassword(@RequestBody PasswordReq request) {
+        return usersService.changePassword(request);
     }
 }

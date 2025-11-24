@@ -12,7 +12,6 @@ public record GetInfoRes(
    String author,
    int likes,
    int views,
-   int comments,
    List<String> imageUrls,
    String createdAt
 ) {
@@ -23,7 +22,6 @@ public record GetInfoRes(
                 info.getAuthor().getDisplayedName(),
                 info.getLikesCount(),
                 info.getViews(),
-                info.getCommentCount(),
                 info.getImageUrls(),
                 info.getCreatedAt()
         );

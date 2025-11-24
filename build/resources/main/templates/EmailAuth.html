@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>이메일 인증</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        img {
+            border: 0;
+            display: block;
+            outline: none;
+            text-decoration: none;
+        }
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                width: 100% !important;
+            }
+            .logo {
+                width: 120px !important;
+                height: auto !important;
+            }
+            .badge {
+                font-size: 16px !important;
+                padding: 10px 20px !important;
+            }
+            .title {
+                font-size: 24px !important;
+            }
+            .description {
+                font-size: 16px !important;
+            }
+            .code-card {
+                padding: 20px 15px !important;
+            }
+            .code {
+                font-size: 32px !important;
+            }
+            .valid-text {
+                font-size: 16px !important;
+            }
+            .inner-padding {
+                padding-left: 20px !important;
+                padding-right: 20px !important;
+            }
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f5f5f5;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f5f5f5; padding: 20px 0;">
+        <tr>
+            <td align="center" style="padding: 0;">
+                <table role="presentation" class="email-container" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 30px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);">
+                    <tr>
+                        <td style="background-color: #26874e; height: 14px; line-height: 14px; font-size: 0;">
+                            &nbsp;
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="inner-padding" style="padding: 0 40px;">
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td align="center" style="padding-top: 40px;">
+                                        <img class="logo" src="https://cdn.discordapp.com/attachments/1414560152803082363/1438082122207461416/dodum2.png?ex=691595d8&is=69144458&hm=34ffba2286202ff4b70436d48b046beee5da593543031a6356d4172b1d3e88e1&" alt="서비스 로고" width="180" style="width: 180px; height: auto; display: block;" />
+                                    </td>
+                                </tr>
+                            </table>
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td align="center" style="padding-top: 25px;">
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td class="badge" style="border-radius: 999px; border: 1.5px solid #26874e; padding: 12px 35px; font-size: 18px; font-weight: 500; color: #26874e; text-align: center;">
+                                                    이메일 인증 요청
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td style="padding-top: 30px;">
+                                        <table role="presentation" width="90%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                            <tr>
+                                                <td style="border-top: 1px solid rgba(0, 0, 0, 0.06); line-height: 0; font-size: 0;">
+                                                    &nbsp;
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td class="title" align="center" style="padding-top: 50px; font-size: 30px; font-weight: 600; color: #000000; line-height: 1.2;">
+                                        이메일 인증을 해주세요
+                                    </td>
+                                </tr>
+                            </table>
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td class="description" align="center" style="padding-top: 25px; font-size: 18px; font-weight: 500; color: #585858; line-height: 1.4;">
+                                        회원님의 계정을 안전하게 보호하기 위해<br />
+                                        아래의 인증번호를 입력해주세요
+                                    </td>
+                                </tr>
+                            </table>
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td align="center" style="padding-top: 50px;">
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="max-width: 400px; width: 80%;">
+                                            <tr>
+                                                <td class="code-card" align="center" style="background-color: #ffffff; border-radius: 30px; border: 1px solid #26874e; box-shadow: 0 0 10px rgba(38, 135, 78, 0.15); padding: 30px 25px;">
+                                                    <span class="code" th:text="${authNum}" style="font-size: 48px; font-weight: 700; color: #26874e; letter-spacing: 0.15em; display: inline-block;">123456</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                                <tr>
+                                    <td class="valid-text" align="center" style="padding-top: 30px; padding-bottom: 50px; font-size: 18px; font-weight: 500; color: #72d49a;">
+                                        인증번호는 <strong style="font-weight: 700;">5분</strong> 동안 유효합니다.
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
