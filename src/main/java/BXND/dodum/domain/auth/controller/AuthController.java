@@ -8,10 +8,7 @@ import BXND.dodum.domain.auth.service.UsersService;
 import BXND.dodum.global.data.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,7 +36,7 @@ public class AuthController {
         return usersService.refresh(request,response);
     }
 
-    @PostMapping("/pwchange")
+    @PutMapping("/pwchange")
     public ApiResponse<String> changePassword(@RequestBody PasswordReq request) {
         return usersService.changePassword(request);
     }
