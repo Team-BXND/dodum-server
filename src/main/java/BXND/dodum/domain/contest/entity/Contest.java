@@ -2,10 +2,14 @@ package BXND.dodum.domain.contest.entity;
 
 import BXND.dodum.domain.auth.entity.Users;
 import BXND.dodum.domain.contest.dto.request.CreateContestReq;
+import BXND.dodum.domain.information.entity.InfoLike;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,6 +40,10 @@ public class Contest {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private Users author;
+
+    @OneToMany(mappedBy = "contest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<ContestAlarm> alarm = new ArrayList<>();
 
     public void updateContest(CreateContestReq request) {
         this.title = request.title();

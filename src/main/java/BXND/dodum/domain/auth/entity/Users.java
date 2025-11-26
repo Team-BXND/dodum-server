@@ -55,7 +55,7 @@ public class Users {
         this.grade = request.grade();
     }
 
-    public String getAuthor() {
+    public String getDisplayedName() {
         int studentNumber = (this.grade * 1000) + (this.class_no * 100) + this.student_no;
         return studentNumber + " " + this.username;
     }

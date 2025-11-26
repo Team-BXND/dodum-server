@@ -3,6 +3,7 @@ package BXND.dodum.domain.contest.controller;
 import BXND.dodum.domain.contest.dto.request.CreateContestReq;
 import BXND.dodum.domain.contest.dto.response.GetContestRes;
 import BXND.dodum.domain.contest.dto.response.ViewContestRes;
+import BXND.dodum.domain.contest.service.AlarmUseCase;
 import BXND.dodum.domain.contest.service.ContestService;
 import BXND.dodum.global.data.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ContestController {
     private final ContestService contestService;
+    private final AlarmUseCase alarmUseCase;
 
     @GetMapping
     public ApiResponse<List<GetContestRes>> findAll(@RequestParam(defaultValue = "0") int page) {
@@ -39,5 +41,10 @@ public class ContestController {
     @DeleteMapping("/{id}")
     public ApiResponse<String> deleteContest(@PathVariable Long id) {
         return contestService.deleteContest(id);
+    }
+
+    @PostMapping("/{id}/active")
+    public ApiResponse<Boolean> toggleActive(@PathVariable Long id) {
+        return alarmUseCase.toggleAlarm(id);
     }
 }
