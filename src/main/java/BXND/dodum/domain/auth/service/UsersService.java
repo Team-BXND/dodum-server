@@ -82,10 +82,6 @@ public class UsersService {
         Users users = usersRepository.findByEmail(request.email())
                 .orElseThrow(() -> new AuthException(AuthStatusCode.INVALID_CREDENTIALS));
 
-        if (!request.newPassword().equals(request.passwordCheck())) {
-            throw new AuthException(AuthStatusCode.PASSWORD_MISMATCH);
-        }
-
         users.setPassword(bCryptPasswordEncoder.encode(request.newPassword()));
         usersRepository.save(users);
         return ApiResponse.ok("비밀번호가 변경되었습니다.");
