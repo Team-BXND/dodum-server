@@ -1,5 +1,6 @@
 package BXND.dodum.domain.misc.application.data.res;
 
+import BXND.dodum.domain.misc.application.data.MiscCategoryE;
 import BXND.dodum.domain.misc.application.entity.MiscInfo;
 
 public record GetMiscRes(
@@ -7,6 +8,7 @@ public record GetMiscRes(
     String title,
     String content,
     int likes,
+    MiscCategoryE category,
     boolean isApproved
 ) {
     public static GetMiscRes from(MiscInfo miscInfo) {
@@ -15,6 +17,7 @@ public record GetMiscRes(
             miscInfo.getTitle(),
             miscInfo.getContent(),
             miscInfo.getLikes(),
+            miscInfo.getCategory(),
             miscInfo.isApproved()
         );
     }
