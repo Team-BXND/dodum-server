@@ -4,6 +4,8 @@ import BXND.dodum.domain.auth.entity.Users;
 import BXND.dodum.domain.auth.exception.AuthException;
 import BXND.dodum.domain.auth.exception.AuthStatusCode;
 import BXND.dodum.domain.auth.repository.UsersRepository;
+import BXND.dodum.domain.file.entity.FileEntityType;
+import BXND.dodum.domain.file.service.FileService;
 import BXND.dodum.domain.information.dto.request.CreateInfoReq;
 import BXND.dodum.domain.information.dto.response.GetInfoRes;
 import BXND.dodum.domain.information.dto.response.ViewInfoRes;
@@ -26,13 +28,14 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class InfoService {
+
     private final InfoRepository infoRepository;
     private final UsersRepository usersRepository;
+    private final FileService fileService;
 
     private static final int PAGE_SIZE = 10;
     private static final String SORT_BY = "id";
@@ -50,6 +53,7 @@ public class InfoService {
         if (user.getGrade() == 1) {
             throw new InfoException(InfoStatusCode.UNAUTHORIZED);
         }
+
         String date = LocalDateTime.now().format(DATE_FORMATTER);
 
         Info info = Info.builder()
@@ -66,27 +70,22 @@ public class InfoService {
 
     public ApiResponse<List<GetInfoRes>> getTrueAllInfo(int page) {
         Sort sort = Sort.by(Sort.Direction.DESC, SORT_BY);
-
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
         Page<Info> infoPage = infoRepository.findAllByIsApprovedTrue(pageable);
-
         List<GetInfoRes> responses = GetInfoRes.fromPage(infoPage);
-
         return ApiResponse.ok(responses);
     }
 
     public ApiResponse<List<GetInfoRes>> getFalseAllInfo(int page) {
-        Users  user = getUser();
+        Users user = getUser();
         if (!user.getRole().isAdminOrTeacher()) {
             throw new InfoException(InfoStatusCode.UNAUTHORIZED);
         }
-        Sort sort = Sort.by(Sort.Direction.DESC, SORT_BY);
 
+        Sort sort = Sort.by(Sort.Direction.DESC, SORT_BY);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
         Page<Info> infoPage = infoRepository.findAllByIsApprovedFalse(pageable);
-
         List<GetInfoRes> responses = GetInfoRes.fromPage(infoPage);
-
         return ApiResponse.ok(responses);
     }
 
@@ -112,9 +111,7 @@ public class InfoService {
 
         if (user.getRole().isAdminOrTeacher() || Objects.equals(author.getId(), user.getId())) {
             info.update(request.title(), request.subTitle(), request.content());
-
             infoRepository.save(info);
-
             return ApiResponse.ok("글이 수정되었습니다.");
         }
         throw new InfoException(InfoStatusCode.UNAUTHORIZED);
@@ -129,10 +126,15 @@ public class InfoService {
         Users author = info.getAuthor();
 
         if (user.getRole().isAdminOrTeacher() || Objects.equals(author.getId(), user.getId())) {
+
+            // 게시글에 attach된 파일들 같이 삭제
+            fileService.deleteAllByEntity(
+                    FileEntityType.INFO_SHARE,
+                    String.valueOf(info.getId())
+            );
+
             infoRepository.delete(info);
-
             return ApiResponse.ok("글이 삭제되었습니다.");
-
         }
         throw new InfoException(InfoStatusCode.UNAUTHORIZED);
     }
