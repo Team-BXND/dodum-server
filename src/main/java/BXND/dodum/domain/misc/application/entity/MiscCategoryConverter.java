@@ -6,14 +6,16 @@ import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
 public class MiscCategoryConverter implements AttributeConverter<MiscCategoryE, Integer> {
+  @Override
   public Integer convertToDatabaseColumn(MiscCategoryE attribute) {
     return attribute.getCode();
   }
 
+  @Override
   public MiscCategoryE convertToEntityAttribute(Integer dbData) {
     for(MiscCategoryE category : MiscCategoryE.values()) {
       if(category.getCode() == dbData) return category;
     };
-    return null;
+    throw new IllegalArgumentException();
   }
 }

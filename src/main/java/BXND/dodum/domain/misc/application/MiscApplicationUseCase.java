@@ -103,7 +103,6 @@ public class MiscApplicationUseCase {
         .orElseThrow(() -> new ApplicationException(CommonStatusCode.NOT_FOUND));
 
     // To-Do: 유저 권한 확인 필요
-    System.out.println(miscInfo.getCategory());
 
     miscInfo.setApproved(true);
   }
