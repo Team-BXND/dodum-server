@@ -1,6 +1,7 @@
 package BXND.dodum.domain.file.service;
 
 import BXND.dodum.domain.file.dto.response.UploadRes;
+import BXND.dodum.domain.file.entity.FileEntityType;
 import BXND.dodum.domain.file.entity.FileRecord;
 import BXND.dodum.domain.file.entity.FileStatus;
 import BXND.dodum.domain.file.repository.FileRecordRepository;
@@ -26,6 +27,7 @@ public class FileService {
     private final StorageService storage;
     private final FileRecordRepository fileRepo;
 
+    // 파일 업로드(생성될 때 pending 상태)
     @Transactional
     public UploadRes upload(MultipartFile file, String uploaderId) {
         if (file == null || file.isEmpty()) {
@@ -56,10 +58,11 @@ public class FileService {
                 .build();
     }
 
+    // 업로더의 pending 파일을 특정 엔티티에 attach 상태로 연결
     @Transactional
-    public void attachFiles(String requesterId, String entityType, String entityId, List<Long> fileIds) {
+    public void attachFiles(String requesterId, FileEntityType entityType, String entityId, List<Long> fileIds) {
         if (!StringUtils.hasText(requesterId)) throw new IllegalArgumentException("요청자 정보 없음");
-        if (!StringUtils.hasText(entityType) || !StringUtils.hasText(entityId)) return;
+        if (entityType == null || !StringUtils.hasText(entityId)) return;
         if (fileIds == null || fileIds.isEmpty()) return;
 
         Set<Long> keep = new HashSet<>(fileIds);
@@ -72,6 +75,7 @@ public class FileService {
         }
     }
 
+    // 단일 파일 삭제(실패 시 soft delete 처리)
     @Transactional
     public void deleteOne(Long fileId) {
         FileRecord fr = fileRepo.findById(fileId)
@@ -85,10 +89,39 @@ public class FileService {
         }
     }
 
+    // 엔티티에 속한 attach 파일 전체 삭제
+    @Transactional
+    public void deleteAllByEntity(FileEntityType entityType, String entityId) {
+        if (entityType == null || !StringUtils.hasText(entityId)) {
+            return;
+        }
+
+        List<FileRecord> files = fileRepo.findAllByEntityTypeAndEntityIdAndStatus(
+                entityType,
+                entityId,
+                FileStatus.ATTACHED
+        );
+
+        for (FileRecord fr : files) {
+            try {
+                storage.delete(fr.getUrl());
+                fileRepo.delete(fr);
+            } catch (Exception e) {
+                fr.softDelete();
+            }
+        }
+    }
+
+    // 파일 조회
     @Transactional(readOnly = true)
     public ResponseEntity<Resource> serveFile(String keyName) {
         FileRecord fr = fileRepo.findByKeyName(keyName)
                 .orElseThrow(() -> new IllegalArgumentException("파일을 찾을 수 없습니다."));
+
+        if (fr.getStatus() == FileStatus.SOFT_DELETED) {
+            throw new IllegalArgumentException("삭제된 파일입니다.");
+        }
+
         Resource resource = storage.loadAsResource(fr.getKeyName());
         String contentType = null;
         try {
