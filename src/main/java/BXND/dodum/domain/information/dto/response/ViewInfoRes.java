@@ -12,15 +12,10 @@ public record ViewInfoRes(
     List<String> imageUrls,
     String author,
     String createdAt,
-    List<CommentRes> comments,
     int likes,
-    int views,
-    int commentCount
+    int views
 ) {
     public  static ViewInfoRes of(Info info, String author) {
-        List<CommentRes> comments = info.getInfoComments().stream()
-                .map(CommentRes::from)
-                .collect(Collectors.toList());
 
         return new ViewInfoRes(
                 info.getTitle(),
@@ -29,10 +24,8 @@ public record ViewInfoRes(
                 info.getImageUrls(),
                 author,
                 info.getCreatedAt(),
-                comments,
                 info.getLikesCount(),
-                info.getViews(),
-                info.getCommentCount()
+                info.getViews()
         );
     }
 }

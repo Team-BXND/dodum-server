@@ -1,6 +1,7 @@
 package BXND.dodum.domain.profile.controller;
 
 import BXND.dodum.domain.profile.dto.request.UpdateProfileReq;
+import BXND.dodum.domain.profile.dto.response.MyPostsRes;
 import BXND.dodum.domain.profile.dto.response.ProfileRes;
 import BXND.dodum.domain.profile.service.ProfileService;
 import BXND.dodum.global.data.ApiResponse;
@@ -13,13 +14,18 @@ import org.springframework.web.bind.annotation.*;
 public class ProfileController {
     private final ProfileService profileService;
 
-    @GetMapping("/{id}")
-    public ApiResponse<ProfileRes> getProfile(@PathVariable Long id) {
-        return profileService.getProfile(id);
+    @GetMapping
+    public ApiResponse<ProfileRes> getProfile() {
+        return profileService.getProfile();
     }
 
-    @PutMapping("/{id}")
-    public ApiResponse<String> updateProfile(@PathVariable Long id,@RequestBody UpdateProfileReq request) {
-        return profileService.updateProfile(id, request);
+    @PutMapping
+    public ApiResponse<String> updateProfile(@RequestBody UpdateProfileReq request) {
+        return profileService.updateProfile(request);
+    }
+
+    @GetMapping("/write")
+    public ApiResponse<MyPostsRes> getMyPosts() {
+        return profileService.getMyPosts();
     }
 }

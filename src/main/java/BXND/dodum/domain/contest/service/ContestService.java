@@ -1,7 +1,6 @@
 package BXND.dodum.domain.contest.service;
 
 import BXND.dodum.domain.auth.entity.Users;
-import BXND.dodum.domain.auth.repository.UsersRepository;
 import BXND.dodum.domain.contest.dto.request.CreateContestReq;
 import BXND.dodum.domain.contest.dto.response.GetContestRes;
 import BXND.dodum.domain.contest.dto.response.ViewContestRes;
@@ -10,14 +9,12 @@ import BXND.dodum.domain.contest.exception.ContestException;
 import BXND.dodum.domain.contest.exception.ContestStatusCode;
 import BXND.dodum.domain.contest.repository.ContestRepository;
 import BXND.dodum.global.data.ApiResponse;
+import BXND.dodum.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,21 +25,14 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class ContestService {
     private final ContestRepository contestRepository;
-    private final UsersRepository usersRepository;
+    private final SecurityUtil securityUtil;
 
     private static final int PAGE_SIZE = 10;
     private static final String SORT_BY = "id";
 
-    public Users getUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return usersRepository.findByUsername(auth.getName())
-                .orElseThrow(() -> new ContestException(ContestStatusCode.USER_NOT_FOUND));
-    }
-
-
     @Transactional
     public ApiResponse<String> createContest(CreateContestReq request) {
-        Users user = getUser();
+        Users user = securityUtil.getUser();
 
         Contest contest = Contest.builder()
                 .title(request.title())
@@ -82,7 +72,7 @@ public class ContestService {
         Contest contest = contestRepository.findById(id)
                 .orElseThrow(() -> new ContestException(ContestStatusCode.CONTEST_NOT_FOUND));
 
-        Users user = getUser();
+        Users user = securityUtil.getUser();
         Users author = contest.getAuthor();
 
         if(Objects.equals(author.getId(), user.getId()) || user.getRole().isAdminOrTeacher()) {
@@ -98,7 +88,7 @@ public class ContestService {
         Contest contest = contestRepository.findById(id)
                 .orElseThrow(() -> new ContestException(ContestStatusCode.CONTEST_NOT_FOUND));
 
-        Users user = getUser();
+        Users user = securityUtil.getUser();
         Users author = contest.getAuthor();
 
         if(Objects.equals(author.getId(), user.getId()) || user.getRole().isAdminOrTeacher()) {

@@ -7,4 +7,5 @@ import java.util.List;
 public interface ArchiveRepository extends JpaRepository<ArchivePost, Long> {
     List<ArchivePost> findByDeletedFalseOrderByCreatedAtDesc();
     List<ArchivePost> findByCategoryAndDeletedFalseOrderByCreatedAtDesc(String category);
+    List<ArchivePost> findByAuthorIdAndDeletedFalseOrderByCreatedAtDesc(String authorId);
 }
