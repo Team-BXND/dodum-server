@@ -6,6 +6,8 @@ import BXND.dodum.domain.archive.entity.ArchivePost;
 import BXND.dodum.domain.archive.exception.ArchiveException;
 import BXND.dodum.domain.archive.exception.ArchiveStatusCode;
 import BXND.dodum.domain.archive.repository.ArchiveRepository;
+import BXND.dodum.domain.file.entity.FileEntityType;
+import BXND.dodum.domain.file.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,6 +24,7 @@ import java.util.List;
 public class ArchiveService {
 
     private final ArchiveRepository repo;
+    private final FileService fileService;
 
     private String currentUserId() { // 사용자 id가져오는거
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -107,6 +110,8 @@ public class ArchiveService {
                 .orElseThrow(() -> new ArchiveException(ArchiveStatusCode.NOT_FOUND));
         if (p.isDeleted()) return;
         assertCanModify(p);
+
+        fileService.deleteAllByEntity(FileEntityType.ARCHIVE, String.valueOf(p.getId()));
 
         p.setDeleted(true);
         p.setDeletedAt(Instant.now());
