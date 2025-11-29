@@ -10,10 +10,9 @@ public record ProfileRes(
         int grade,
         int class_no,
         int student_no,
-        Club club,
-        Long countComment
+        Club club
 ) {
-    public static ProfileRes of(Users user, Long countComment) {
+    public static ProfileRes of(Users user) {
         return new ProfileRes(
                 user.getUsername(),
                 user.getPhone(),
@@ -21,8 +20,7 @@ public record ProfileRes(
                 user.getGrade(),
                 user.getClass_no(),
                 user.getStudent_no(),
-                user.getClub(),
-                countComment
+                user.getClub()
         );
     }
 }

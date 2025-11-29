@@ -43,10 +43,6 @@ public class Info {
     @Setter
     private boolean isApproved = false;
 
-    @OneToMany(mappedBy = "info", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<InfoComment> infoComments = new ArrayList<>();
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     private Users author;
@@ -59,10 +55,6 @@ public class Info {
 
     public void incrementViews() {
         this.views++;
-    }
-
-    public int getCommentCount() {
-        return infoComments.size();
     }
 
     public int getLikesCount() {

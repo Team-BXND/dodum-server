@@ -4,7 +4,6 @@ import BXND.dodum.domain.information.dto.request.CommentReq;
 import BXND.dodum.domain.information.dto.request.CreateInfoReq;
 import BXND.dodum.domain.information.dto.response.GetInfoRes;
 import BXND.dodum.domain.information.dto.response.ViewInfoRes;
-import BXND.dodum.domain.information.service.CommentUseCase;
 import BXND.dodum.domain.information.service.InfoService;
 import BXND.dodum.domain.information.service.LikeUseCase;
 import BXND.dodum.global.data.ApiResponse;
@@ -19,7 +18,6 @@ import java.util.List;
 public class InfoController {
     private final InfoService infoService;
     private final LikeUseCase likeService;
-    private final CommentUseCase commentService;
 
     @GetMapping
     public ApiResponse<List<GetInfoRes>> getAllInformation(@RequestParam(defaultValue = "0") int page) {
@@ -49,11 +47,6 @@ public class InfoController {
     @GetMapping("/{id}")
     public ApiResponse<ViewInfoRes> viewInfo(@PathVariable Long id) {
         return infoService.viewInfo(id);
-    }
-
-    @PostMapping("/{id}/comment")
-    public ApiResponse<String> addComment(@PathVariable Long id, @RequestBody CommentReq commentReq) {
-        return commentService.createComment(id, commentReq);
     }
 
     @PostMapping("/{id}/approve")
