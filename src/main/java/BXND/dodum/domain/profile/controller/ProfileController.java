@@ -1,6 +1,7 @@
 package BXND.dodum.domain.profile.controller;
 
 import BXND.dodum.domain.profile.dto.request.UpdateProfileReq;
+import BXND.dodum.domain.profile.dto.response.MyPostsRes;
 import BXND.dodum.domain.profile.dto.response.ProfileRes;
 import BXND.dodum.domain.profile.service.ProfileService;
 import BXND.dodum.global.data.ApiResponse;

@@ -11,6 +11,7 @@ import BXND.dodum.domain.information.exception.InfoStatusCode;
 import BXND.dodum.domain.information.repository.InfoLikeRepository;
 import BXND.dodum.domain.information.repository.InfoRepository;
 import BXND.dodum.global.data.ApiResponse;
+import BXND.dodum.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,19 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class LikeUseCase {
 
     private final InfoRepository infoRepository;
-    private final UsersRepository usersRepository;
     private final InfoLikeRepository infoLikeRepository;
-
-
-    private Users getUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return usersRepository.findByUsername(auth.getName())
-                .orElseThrow(() -> new AuthException(AuthStatusCode.USER_NOT_FOUND));
-    }
+    private final SecurityUtil securityUtil;
 
     @Transactional
     public ApiResponse<String> toggleLike(Long id) {
-        Users user = getUser();
+        Users user = securityUtil.getUser();
 
         Info info = infoRepository.findById(id)
                 .orElseThrow(() -> new InfoException(InfoStatusCode.INFO_NOT_FOUND));
