@@ -1,7 +1,7 @@
-package BXND.dodum.domain.misc.application.data.res;
+package BXND.dodum.domain.misc.dto.res;
 
-import BXND.dodum.domain.misc.application.data.MiscCategoryE;
-import BXND.dodum.domain.misc.application.entity.MiscInfo;
+import BXND.dodum.domain.misc.dto.MiscCategoryE;
+import BXND.dodum.domain.misc.entity.MiscInfo;
 
 public record GetMiscRes(
     Long id,

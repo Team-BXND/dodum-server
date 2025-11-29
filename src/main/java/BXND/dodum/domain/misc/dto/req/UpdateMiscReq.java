@@ -1,6 +1,6 @@
-package BXND.dodum.domain.misc.application.data.req;
+package BXND.dodum.domain.misc.dto.req;
 
-import BXND.dodum.domain.misc.application.data.MiscCategoryE;
+import BXND.dodum.domain.misc.dto.MiscCategoryE;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 

@@ -1,4 +1,4 @@
-package BXND.dodum.domain.misc.application.data;
+package BXND.dodum.domain.misc.dto;
 
 public enum MiscCriteriaE {
   LATEST,

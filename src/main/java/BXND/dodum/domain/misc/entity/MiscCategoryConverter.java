@@ -1,6 +1,6 @@
-package BXND.dodum.domain.misc.application.entity;
+package BXND.dodum.domain.misc.entity;
 
-import BXND.dodum.domain.misc.application.data.MiscCategoryE;
+import BXND.dodum.domain.misc.dto.MiscCategoryE;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

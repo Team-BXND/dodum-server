@@ -1,6 +1,6 @@
-package BXND.dodum.domain.misc.application.repository;
+package BXND.dodum.domain.misc.repository;
 
-import BXND.dodum.domain.misc.application.entity.MiscInfo;
+import BXND.dodum.domain.misc.entity.MiscInfo;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

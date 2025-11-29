@@ -1,6 +1,6 @@
-package BXND.dodum.domain.misc.application.data.res;
+package BXND.dodum.domain.misc.dto.res;
 
-import BXND.dodum.domain.misc.application.entity.MiscInfo;
+import BXND.dodum.domain.misc.entity.MiscInfo;
 import java.util.List;
 
 public record GetAllMiscRes(

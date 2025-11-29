@@ -1,13 +1,13 @@
-package BXND.dodum.domain.misc.presentation;
+package BXND.dodum.domain.misc.controller;
 
-import BXND.dodum.domain.misc.application.MiscApplicationUseCase;
-import BXND.dodum.domain.misc.application.data.req.CreateMiscReq;
-import BXND.dodum.domain.misc.application.data.req.GetAllMiscReq;
-import BXND.dodum.domain.misc.application.data.req.UpdateMiscReq;
-import BXND.dodum.domain.misc.application.data.res.CreateMiscRes;
-import BXND.dodum.domain.misc.application.data.res.GetAllMiscRes;
-import BXND.dodum.domain.misc.application.data.res.GetMiscRes;
-import BXND.dodum.domain.misc.application.data.res.UpdateMiscRes;
+import BXND.dodum.domain.misc.service.MiscApplicationService;
+import BXND.dodum.domain.misc.dto.req.CreateMiscReq;
+import BXND.dodum.domain.misc.dto.req.GetAllMiscReq;
+import BXND.dodum.domain.misc.dto.req.UpdateMiscReq;
+import BXND.dodum.domain.misc.dto.res.CreateMiscRes;
+import BXND.dodum.domain.misc.dto.res.GetAllMiscRes;
+import BXND.dodum.domain.misc.dto.res.GetMiscRes;
+import BXND.dodum.domain.misc.dto.res.UpdateMiscRes;
 import BXND.dodum.global.data.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,43 +25,43 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/misc")
 @RequiredArgsConstructor
 public class MiscController {
-  private final MiscApplicationUseCase miscApplicationUseCase;
+  private final MiscApplicationService miscApplicationService;
 
   @GetMapping
   public ApiResponse<GetAllMiscRes> getAllMisc(GetAllMiscReq getAllMiscReq){
-    return ApiResponse.ok(miscApplicationUseCase.getAllMisc(getAllMiscReq));
+    return ApiResponse.ok(miscApplicationService.getAllMisc(getAllMiscReq));
   }
 
   @GetMapping("/{id}")
   public ApiResponse<GetMiscRes> getMisc(@PathVariable Long id) {
-    return ApiResponse.ok(miscApplicationUseCase.getMisc(id));
+    return ApiResponse.ok(miscApplicationService.getMisc(id));
   }
 
   @PostMapping
   public ApiResponse<CreateMiscRes> createMisc(@Valid @RequestBody CreateMiscReq createMiscReq) {
-    return ApiResponse.ok(miscApplicationUseCase.createMisc(createMiscReq));
+    return ApiResponse.ok(miscApplicationService.createMisc(createMiscReq));
   }
 
   @PutMapping("/{id}")
   public ApiResponse<UpdateMiscRes> updateMisc(@PathVariable Long id, @Valid @RequestBody UpdateMiscReq updateMiscReq) {
-    return ApiResponse.ok(miscApplicationUseCase.updateMisc(id, updateMiscReq));
+    return ApiResponse.ok(miscApplicationService.updateMisc(id, updateMiscReq));
   }
 
   @DeleteMapping("/{id}")
   public ApiResponse<Void> deleteMisc(@PathVariable Long id) {
-    miscApplicationUseCase.deleteMisc(id);
+    miscApplicationService.deleteMisc(id);
     return ApiResponse.ok(null);
   }
 
   @PatchMapping("/{id}/approve")
   public ApiResponse<Void> approveMisc(@PathVariable Long id) {
-    miscApplicationUseCase.approveMisc(id);
+    miscApplicationService.approveMisc(id);
     return ApiResponse.ok(null);
   }
 
   @PatchMapping("/{id}/disapprove")
   public ApiResponse<Void> disapproveMisc(@PathVariable Long id) {
-    miscApplicationUseCase.disapproveMisc(id);
+    miscApplicationService.disapproveMisc(id);
     return ApiResponse.ok(null);
   }
 }

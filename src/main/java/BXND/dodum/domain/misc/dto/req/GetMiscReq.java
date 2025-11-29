@@ -1,4 +1,4 @@
-package BXND.dodum.domain.misc.application.data.req;
+package BXND.dodum.domain.misc.dto.req;
 
 import jakarta.validation.constraints.NotNull;
 

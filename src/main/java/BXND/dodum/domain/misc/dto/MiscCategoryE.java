@@ -1,4 +1,4 @@
-package BXND.dodum.domain.misc.application.data;
+package BXND.dodum.domain.misc.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

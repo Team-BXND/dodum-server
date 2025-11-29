@@ -1,18 +1,14 @@
-package BXND.dodum.domain.misc.application;
+package BXND.dodum.domain.misc.service;
 
-import BXND.dodum.domain.misc.application.data.MiscCriteriaE;
-import BXND.dodum.domain.misc.application.data.req.ApproveMiscReq;
-import BXND.dodum.domain.misc.application.data.req.CreateMiscReq;
-import BXND.dodum.domain.misc.application.data.req.DeleteMiscReq;
-import BXND.dodum.domain.misc.application.data.req.GetAllMiscReq;
-import BXND.dodum.domain.misc.application.data.req.GetMiscReq;
-import BXND.dodum.domain.misc.application.data.req.UpdateMiscReq;
-import BXND.dodum.domain.misc.application.data.res.CreateMiscRes;
-import BXND.dodum.domain.misc.application.data.res.GetAllMiscRes;
-import BXND.dodum.domain.misc.application.data.res.GetMiscRes;
-import BXND.dodum.domain.misc.application.data.res.UpdateMiscRes;
-import BXND.dodum.domain.misc.application.entity.MiscInfo;
-import BXND.dodum.domain.misc.application.repository.MiscInfoRepository;
+import BXND.dodum.domain.misc.dto.req.CreateMiscReq;
+import BXND.dodum.domain.misc.dto.req.GetAllMiscReq;
+import BXND.dodum.domain.misc.dto.req.UpdateMiscReq;
+import BXND.dodum.domain.misc.dto.res.CreateMiscRes;
+import BXND.dodum.domain.misc.dto.res.GetAllMiscRes;
+import BXND.dodum.domain.misc.dto.res.GetMiscRes;
+import BXND.dodum.domain.misc.dto.res.UpdateMiscRes;
+import BXND.dodum.domain.misc.entity.MiscInfo;
+import BXND.dodum.domain.misc.repository.MiscInfoRepository;
 import BXND.dodum.global.exception.exception.ApplicationException;
 import BXND.dodum.global.exception.status_code.CommonStatusCode;
 import java.util.Optional;
@@ -27,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
-public class MiscApplicationUseCase {
+public class MiscApplicationService {
   private final MiscInfoRepository miscInfoRepository;
 
   public GetAllMiscRes getAllMisc(GetAllMiscReq getAllMiscReq) {
