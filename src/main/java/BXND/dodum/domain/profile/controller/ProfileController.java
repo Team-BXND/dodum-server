@@ -23,9 +23,4 @@ public class ProfileController {
     public ApiResponse<String> updateProfile(@RequestBody UpdateProfileReq request) {
         return profileService.updateProfile(request);
     }
-
-    @GetMapping("/write")
-    public ApiResponse<MyPostsRes> getMyPosts() {
-        return profileService.getMyPosts();
-    }
 }

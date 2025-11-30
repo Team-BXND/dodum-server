@@ -1,6 +1,5 @@
 package BXND.dodum.domain.information.controller;
 
-import BXND.dodum.domain.information.dto.request.CommentReq;
 import BXND.dodum.domain.information.dto.request.CreateInfoReq;
 import BXND.dodum.domain.information.dto.response.GetInfoRes;
 import BXND.dodum.domain.information.dto.response.ViewInfoRes;

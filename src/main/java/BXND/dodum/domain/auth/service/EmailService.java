@@ -60,12 +60,12 @@ public class EmailService {
         sendEmail(serviceName,customerMail,title, content, authNum);
         return Integer.toString(authNum);
     }
-    public ApiResponse<String> checkEmail(String email, String authNum) {
+    public ApiResponse<Boolean> checkEmail(String email, String authNum) {
         ValueOperations<String, String> valueOperations = redisConfig.redisTemplate().opsForValue();
         String code = valueOperations.get(email);
         if(Objects.equals(code, authNum)){
             redisConfig.redisTemplate().delete(email);
-            return ApiResponse.ok("이메일 인증 성공");
+            return ApiResponse.ok(Boolean.TRUE);
         }
         throw new AuthException(AuthStatusCode.EMAIL_VERIFICATION_FAILED);
     }
