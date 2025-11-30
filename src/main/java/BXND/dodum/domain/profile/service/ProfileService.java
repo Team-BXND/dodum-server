@@ -36,13 +36,10 @@ public class ProfileService {
 
     public ApiResponse<String> updateProfile(UpdateProfileReq request) {
         Users user = securityUtil.getUser();
-
-    public ApiResponse<String> updateProfile(UpdateProfileReq request) {
-        Users user = getUser();
         user.updateProfile(request);
         usersRepository.save(user);
         return ApiResponse.ok("프로필이 수정되었습니다.");
-    }
+        }
 
     public ApiResponse<MyPostsRes> getMyPosts() {
         Users user = securityUtil.getUser();
@@ -65,4 +62,5 @@ public class ProfileService {
         MyPostsRes response = new MyPostsRes(informations, contests, archives);
         return ApiResponse.ok(response);
     }
+
 }

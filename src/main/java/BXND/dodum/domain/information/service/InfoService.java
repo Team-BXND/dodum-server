@@ -36,6 +36,7 @@ public class InfoService {
 
     private final InfoRepository infoRepository;
     private final SecurityUtil securityUtil;
+    private final FileService fileService;
 
     private static final int PAGE_SIZE = 10;
     private static final String SORT_BY = "id";
