@@ -1,7 +1,9 @@
 package BXND.dodum.domain.misc.dto.res;
 
+import BXND.dodum.domain.auth.entity.Users;
 import BXND.dodum.domain.misc.dto.MiscCategoryE;
 import BXND.dodum.domain.misc.entity.MiscInfo;
+import BXND.dodum.domain.profile.dto.response.ProfileRes;
 
 public record GetMiscRes(
     Long id,
@@ -9,7 +11,8 @@ public record GetMiscRes(
     String content,
     int likes,
     MiscCategoryE category,
-    boolean isApproved
+    boolean isApproved,
+    ProfileRes author
 ) {
     public static GetMiscRes from(MiscInfo miscInfo) {
         return new GetMiscRes(
@@ -18,7 +21,8 @@ public record GetMiscRes(
             miscInfo.getContent(),
             miscInfo.getLikes(),
             miscInfo.getCategory(),
-            miscInfo.isApproved()
+            miscInfo.isApproved(),
+            ProfileRes.of(miscInfo.getAuthor())
         );
     }
 }
