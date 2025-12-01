@@ -1,5 +1,6 @@
 package BXND.dodum.domain.misc.service;
 
+import BXND.dodum.domain.auth.entity.Users;
 import BXND.dodum.domain.misc.dto.req.CreateMiscReq;
 import BXND.dodum.domain.misc.dto.req.GetAllMiscReq;
 import BXND.dodum.domain.misc.dto.req.UpdateMiscReq;
@@ -11,6 +12,7 @@ import BXND.dodum.domain.misc.entity.MiscInfo;
 import BXND.dodum.domain.misc.repository.MiscInfoRepository;
 import BXND.dodum.global.exception.exception.ApplicationException;
 import BXND.dodum.global.exception.status_code.CommonStatusCode;
+import BXND.dodum.global.util.SecurityUtil;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 public class MiscApplicationService {
+  private final SecurityUtil securityUtil;
   private final MiscInfoRepository miscInfoRepository;
 
   public GetAllMiscRes getAllMisc(GetAllMiscReq getAllMiscReq) {
@@ -58,10 +61,12 @@ public class MiscApplicationService {
 
   @Transactional
   public CreateMiscRes createMisc(CreateMiscReq createMiscReq) {
+    Users user = securityUtil.getUser();
     MiscInfo miscInfo = MiscInfo.builder()
         .title(createMiscReq.title())
         .content(createMiscReq.content())
         .category(createMiscReq.category())
+        .author(user)
         .likes(0)
         .build();
     
