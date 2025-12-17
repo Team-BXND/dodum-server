@@ -53,7 +53,6 @@ public class InfoService {
 
         Info info = Info.builder()
                 .title(request.title())
-                .subTitle(request.subTitle())
                 .content(request.content())
                 .createdAt(date)
                 .author(user)
@@ -105,7 +104,7 @@ public class InfoService {
         Users author = info.getAuthor();
 
         if (user.getRole().isAdminOrTeacher() || Objects.equals(author.getId(), user.getId())) {
-            info.update(request.title(), request.subTitle(), request.content());
+            info.update(request.title(), request.content());
             infoRepository.save(info);
             return ApiResponse.ok("글이 수정되었습니다.");
         }
