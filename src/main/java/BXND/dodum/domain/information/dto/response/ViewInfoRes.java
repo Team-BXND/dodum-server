@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 
 public record ViewInfoRes(
     String title,
-    String subTitle,
     String content,
     List<String> imageUrls,
     String author,
@@ -19,7 +18,6 @@ public record ViewInfoRes(
 
         return new ViewInfoRes(
                 info.getTitle(),
-                info.getSubTitle(),
                 info.getContent(),
                 info.getImageUrls(),
                 author,

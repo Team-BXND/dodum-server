@@ -6,6 +6,7 @@ import BXND.dodum.domain.information.dto.response.ViewInfoRes;
 import BXND.dodum.domain.information.service.InfoService;
 import BXND.dodum.domain.information.service.LikeUseCase;
 import BXND.dodum.global.data.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class InfoController {
     }
 
     @PostMapping
-    public ApiResponse<String> createInfo(@RequestBody CreateInfoReq request) {
+    public ApiResponse<String> createInfo(@Valid @RequestBody CreateInfoReq request) {
         return infoService.createInfo(request);
     }
 
