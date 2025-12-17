@@ -13,7 +13,8 @@ public record GetInfoRes(
    int likes,
    int views,
    List<String> imageUrls,
-   String createdAt
+   String createdAt,
+   Long totalCount
 ) {
     public static GetInfoRes from(Info info) {
         return new GetInfoRes(
@@ -23,13 +24,28 @@ public record GetInfoRes(
                 info.getLikesCount(),
                 info.getViews(),
                 info.getImageUrls(),
-                info.getCreatedAt()
+                info.getCreatedAt(),
+                null
+        );
+    }
+
+    public static GetInfoRes from(Info info, Long totalCount) {
+        return new GetInfoRes(
+                info.getId(),
+                info.getTitle(),
+                info.getAuthor().getDisplayedName(),
+                info.getLikesCount(),
+                info.getViews(),
+                info.getImageUrls(),
+                info.getCreatedAt(),
+                totalCount
         );
     }
 
     public static List<GetInfoRes> fromPage(Page<Info> infoPage) {
+        long totalCount = infoPage.getTotalElements();
         return infoPage.getContent().stream()
-                .map(GetInfoRes::from)
+                .map(info -> GetInfoRes.from(info, totalCount))
                 .collect(Collectors.toList());
     }
 }
