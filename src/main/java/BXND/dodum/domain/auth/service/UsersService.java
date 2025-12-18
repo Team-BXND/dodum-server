@@ -11,9 +11,12 @@ import BXND.dodum.domain.auth.repository.UsersRepository;
 import BXND.dodum.global.data.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
@@ -27,6 +30,7 @@ public class UsersService {
         if (usersRepository.existsByUsername(request.username()) || usersRepository.existsByEmail(request.email())) {
             throw new AuthException(AuthStatusCode.ALREADY_EXIST_ACCOUNT);
         }
+        Role role = (request.grade() == 1) ? Role.STUDENT : Role.SENIOR;
 
         Users user = Users.builder()
                 .username(request.username())
@@ -39,12 +43,9 @@ public class UsersService {
                 .student_no(request.student_no())
                 .club(request.club())
                 .history(request.history())
+                .role(role)
                 .build();
-        if (user.getGrade() == 1) {
-            user.setRole(Role.STUDENT);
-        } else {
-            user.setRole(Role.SENIOR);
-        }
+
         usersRepository.save(user);
         return ApiResponse.ok("회원가입에 성공했습니다.");
     }
@@ -54,12 +55,15 @@ public class UsersService {
         if (!bCryptPasswordEncoder.matches(request.password(), users.getPassword())) {
             throw new  AuthException(AuthStatusCode.INVALID_CREDENTIALS);
         }
+
         GenerateTokenRequest generateTokenRequest = new  GenerateTokenRequest(
                 users.getUsername(),
                 users.getRole()
         );
+
         String accessToken = tokenUseCase.generateAccessToken(generateTokenRequest, response);
         String refreshToken =  tokenUseCase.generateRefreshToken(generateTokenRequest, response);
+
         return ApiResponse.ok(new SignInResponse(accessToken, refreshToken));
     }
 
@@ -70,5 +74,16 @@ public class UsersService {
 
     public ApiResponse<reGenerateAccessTokenResponse> refresh(reGenerateTokenRequest request, HttpServletResponse response) {
         return tokenUseCase.reGenerateAccessToken(request, response);
+    }
+
+    @Transactional
+    public ApiResponse<String> changePassword(PasswordReq request) {
+
+        Users users = usersRepository.findByEmail(request.email())
+                .orElseThrow(() -> new AuthException(AuthStatusCode.INVALID_CREDENTIALS));
+
+        users.setPassword(bCryptPasswordEncoder.encode(request.newPassword()));
+        usersRepository.save(users);
+        return ApiResponse.ok("비밀번호가 변경되었습니다.");
     }
 }

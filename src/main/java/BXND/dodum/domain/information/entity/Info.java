@@ -20,7 +20,6 @@ public class Info {
 
     @NotBlank(message = "제목은 필수 입력입니다.")
     private String title;
-    private String subTitle;
     @Column(columnDefinition = "TEXT")
     @NotBlank(message = "글의 내용은 필수 입력입니다.")
     private String content;
@@ -43,26 +42,17 @@ public class Info {
     @Setter
     private boolean isApproved = false;
 
-    @OneToMany(mappedBy = "info", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<InfoComment> infoComments = new ArrayList<>();
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     private Users author;
 
-    public void update(String title, String subtitle, String content) {
+    public void update(String title, String content) {
         this.title = title;
-        this.subTitle = subtitle;
         this.content = content;
     }
 
     public void incrementViews() {
         this.views++;
-    }
-
-    public int getCommentCount() {
-        return infoComments.size();
     }
 
     public int getLikesCount() {

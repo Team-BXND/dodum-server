@@ -14,6 +14,7 @@ import BXND.dodum.domain.information.exception.InfoException;
 import BXND.dodum.domain.information.exception.InfoStatusCode;
 import BXND.dodum.domain.information.repository.InfoRepository;
 import BXND.dodum.global.data.ApiResponse;
+import BXND.dodum.global.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,22 +35,16 @@ import java.util.Objects;
 public class InfoService {
 
     private final InfoRepository infoRepository;
-    private final UsersRepository usersRepository;
+    private final SecurityUtil securityUtil;
     private final FileService fileService;
 
     private static final int PAGE_SIZE = 10;
     private static final String SORT_BY = "id";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    private Users getUser() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return usersRepository.findByUsername(auth.getName())
-                .orElseThrow(() -> new AuthException(AuthStatusCode.USER_NOT_FOUND));
-    }
-
     @Transactional
     public ApiResponse<String> createInfo(CreateInfoReq request) {
-        Users user = getUser();
+        Users user = securityUtil.getUser();
         if (user.getGrade() == 1) {
             throw new InfoException(InfoStatusCode.UNAUTHORIZED);
         }
@@ -58,7 +53,6 @@ public class InfoService {
 
         Info info = Info.builder()
                 .title(request.title())
-                .subTitle(request.subTitle())
                 .content(request.content())
                 .createdAt(date)
                 .author(user)
@@ -77,7 +71,7 @@ public class InfoService {
     }
 
     public ApiResponse<List<GetInfoRes>> getFalseAllInfo(int page) {
-        Users user = getUser();
+        Users  user = securityUtil.getUser();
         if (!user.getRole().isAdminOrTeacher()) {
             throw new InfoException(InfoStatusCode.UNAUTHORIZED);
         }
@@ -104,13 +98,13 @@ public class InfoService {
 
     @Transactional
     public ApiResponse<String> updateInfo(Long id, CreateInfoReq request) {
-        Users user = getUser();
+        Users user = securityUtil.getUser();
         Info info = infoRepository.findById(id)
                 .orElseThrow(() -> new InfoException(InfoStatusCode.INFO_NOT_FOUND));
         Users author = info.getAuthor();
 
         if (user.getRole().isAdminOrTeacher() || Objects.equals(author.getId(), user.getId())) {
-            info.update(request.title(), request.subTitle(), request.content());
+            info.update(request.title(), request.content());
             infoRepository.save(info);
             return ApiResponse.ok("글이 수정되었습니다.");
         }
@@ -119,7 +113,7 @@ public class InfoService {
 
     @Transactional
     public ApiResponse<String> deleteInfo(Long id) {
-        Users user = getUser();
+        Users user = securityUtil.getUser();
 
         Info info = infoRepository.findById(id)
                 .orElseThrow(() -> new InfoException(InfoStatusCode.INFO_NOT_FOUND));
@@ -141,7 +135,7 @@ public class InfoService {
 
     @Transactional
     public ApiResponse<String> approveInfo(Long id) {
-        Users user = getUser();
+        Users user = securityUtil.getUser();
 
         if (!user.getRole().isAdminOrTeacher()) {
             throw new AuthException(AuthStatusCode.ACCESS_DENIED);
